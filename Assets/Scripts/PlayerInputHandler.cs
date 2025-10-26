@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputHandler : MonoBehaviour, PlayerInputActions.IPlayerActions
+public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
+    public Vector2 moveInput;
+
     private PlayerInput playerInput;
     private PlayerMovement m_Movement;
     private PlayerCombat m_Combat;
@@ -25,8 +27,12 @@ public class PlayerInputHandler : MonoBehaviour, PlayerInputActions.IPlayerActio
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        var value = context.ReadValue<Vector2>();
-        Debug.Log("Movement value: " + value);
+        // specify the context of the input
+        if (context.performed)
+        {
+            Debug.Log("OnMove() was called");
+            moveInput = context.ReadValue<Vector2>();
+        }
     }
 
     public void OnLook(InputAction.CallbackContext context)
@@ -36,7 +42,10 @@ public class PlayerInputHandler : MonoBehaviour, PlayerInputActions.IPlayerActio
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        Debug.Log("OnAttack() was called");
+        if (context.performed)
+        {
+            Debug.Log("OnAttack() was called");
+        }
     }
 
 }
