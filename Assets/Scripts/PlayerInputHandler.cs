@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
-    public Vector2 moveInput;
+    public Vector2 MoveInput { get; private set; }
 
     private PlayerInput playerInput;
     private PlayerMovement m_Movement;
@@ -27,12 +27,7 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        // specify the context of the input
-        if (context.performed)
-        {
-            Debug.Log("OnMove() was called");
-            moveInput = context.ReadValue<Vector2>();
-        }
+        MoveInput = context.ReadValue<Vector2>();
     }
 
     public void OnLook(InputAction.CallbackContext context)
