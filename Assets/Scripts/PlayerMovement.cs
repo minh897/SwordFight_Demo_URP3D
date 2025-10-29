@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // the player should move in the direction relative to the main camera
         // for example: the camera is pointing downward from uphigh, the player is 
@@ -24,18 +24,17 @@ public class PlayerMovement : MonoBehaviour
         // while still on a horizontal planee disregard their world-space position.
 
         // read input from PlayerInputHandler
-        Vector2 moveInput = m_inputHandler.MoveInput;
-        Vector3 moveDir = new(moveInput.x, 0, moveInput.y);
+        Vector3 moveDir = new(m_inputHandler.MoveInput.x, 0, m_inputHandler.MoveInput.y);
 
         // move the player rigidbody via Rigidbody.MovePosition()
-        Vector3 targetPosition = m_rb.position + moveSpeed * Time.deltaTime * moveDir;
+        Vector3 targetPosition = m_rb.position + moveSpeed * Time.fixedDeltaTime * moveDir;
         m_rb.MovePosition(targetPosition);
 
         // rotate the player facing moving direction smoothly
         // stop the rotation when the direction magnitude get smaller
         if (moveDir.sqrMagnitude <= 0.0001f) return; // this allow more control of the rotation
         Quaternion targetRotation = Quaternion.LookRotation(moveDir);
-        Quaternion newRotation = Quaternion.Lerp(m_rb.rotation, targetRotation, Time.deltaTime * rotateSpeed);
+        Quaternion newRotation = Quaternion.Lerp(m_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         m_rb.MoveRotation(newRotation);
     }
 

@@ -29,11 +29,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     {
         MoveInput = context.ReadValue<Vector2>();
     }
-
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        Debug.Log("OnLook() was called");
-    }
     
     public void OnAttack(InputAction.CallbackContext context)
     {
