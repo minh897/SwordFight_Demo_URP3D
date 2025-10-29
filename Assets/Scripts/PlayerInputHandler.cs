@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public Vector2 MoveInput { get; private set; }
+    public bool AttackInput { get; private set; }
 
     private PlayerInput playerInput;
     private PlayerMovement m_Movement;
@@ -32,10 +33,7 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            Debug.Log("OnAttack() was called");
-        }
+        AttackInput = context.ReadValueAsButton();
     }
 
 }

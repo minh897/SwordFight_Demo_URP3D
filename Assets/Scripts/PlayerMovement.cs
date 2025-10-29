@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInputHandler m_inputHandler;
     private Rigidbody m_rb;
+
+    private Vector3 moveDir;
+    private Vector3 currentPos;
+    private Vector3 lastPos;
     
     void Start()
     {
@@ -17,46 +21,36 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // the player should move in the direction relative to the main camera
-        // for example: the camera is pointing downward from uphigh, the player is 
-        // is the camera's center, if the player moves forward their direction should 
-        // point toward the upper bound of the camera and if they move bacward the lower bound
-        // while still on a horizontal planee disregard their world-space position.
-
         // read input from PlayerInputHandler
-        Vector3 moveDir = new(m_inputHandler.MoveInput.x, 0, m_inputHandler.MoveInput.y);
+        moveDir = new(m_inputHandler.MoveInput.x, 0, m_inputHandler.MoveInput.y);
+        
+        // rotate the player facing moving direction smoothly
+        // stop the rotation when the direction magnitude get smaller
+        currentPos = moveDir;
+        if (moveDir.sqrMagnitude > 0.0001f) // this allow more control of the rotation
+        {
+            lastPos = currentPos;
+        } 
+        Quaternion targetRotation = Quaternion.LookRotation(lastPos);
+        Quaternion newRotation = Quaternion.Lerp(m_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
+        m_rb.MoveRotation(newRotation);
 
         // move the player rigidbody via Rigidbody.MovePosition()
         Vector3 targetPosition = m_rb.position + moveSpeed * Time.fixedDeltaTime * moveDir;
         m_rb.MovePosition(targetPosition);
-
-        // rotate the player facing moving direction smoothly
-        // stop the rotation when the direction magnitude get smaller
-        if (moveDir.sqrMagnitude <= 0.0001f) return; // this allow more control of the rotation
-        Quaternion targetRotation = Quaternion.LookRotation(moveDir);
-        Quaternion newRotation = Quaternion.Lerp(m_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
-        m_rb.MoveRotation(newRotation);
     }
 
     void OnDrawGizmos()
     {
         // stop drawing Gizmos when not playing
         if (!Application.isPlaying) return;
+
         // draw the arrow point to the direction of input not the velocity
         float arrowLength = 1.0F;
-        var position = transform.position;
-
-        // read input from PlayerInputHandler
-        Vector2 moveInput = m_inputHandler.MoveInput;
-        Vector3 moveDir = new(moveInput.x, 0, moveInput.y);
-        Quaternion newRot = Quaternion.LookRotation(moveDir);
-
-        // I need to interpolate between current rotation and new rotation
-        // to create a smooth rotation, then update the arrow rotation
-        // What I need: the current rotation and the new rotation that rotate toward the moving direction
+        transform.GetPositionAndRotation(out var position, out var rotation);
 
         Handles.color = Color.red;
-        Handles.ArrowHandleCap(0, position, newRot, arrowLength, EventType.Repaint);
+        Handles.ArrowHandleCap(0, position, rotation, arrowLength, EventType.Repaint);
     }
 
     // Smoothly rotate the enemy game object to face the given target position
