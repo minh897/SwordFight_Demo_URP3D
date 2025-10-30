@@ -1,13 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
-    [SerializeField] private GameObject weapon;
+    // references
+    [SerializeField] private GameObject weaponDefaultPrefab;
+    [SerializeField] private Transform handLeft;
+    [SerializeField] private Transform handRight;
+    [SerializeField] private Transform pivotPoint;
+
+    // settings
     [SerializeField] private float damage = 5.0f;
     [SerializeField] private float attackCooldown = 0.5f;
+    [SerializeField] private float defaultSwingDuration = 0.1f;
 
     private PlayerInputHandler _inputHandler;
+    private GameObject equipedWeapon;
+    private Coroutine attackRoutine;
     
     // attack timers
     private float attackTimer;
@@ -17,7 +27,17 @@ public class PlayerCombat : MonoBehaviour
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
 
-        weapon.SetActive(false);
+        // handLeft.gameObject.SetActive(false);
+        // handRight.gameObject.SetActive(false);
+
+        EquipWeaponDefault(weaponDefaultPrefab, handRight);
+    }
+
+    private void EquipWeaponDefault(GameObject weaponPrefab, Transform equipHand)
+    {
+        equipedWeapon = Instantiate(weaponPrefab, transform, false);
+        equipedWeapon.transform.position = equipHand.position;
+        equipedWeapon.transform.forward = equipHand.right;
     }
 
     void Update()
@@ -26,26 +46,46 @@ public class PlayerCombat : MonoBehaviour
 
         var inputValue = _inputHandler.AttackInput;
 
-        if (!inputValue)
-            return;
-
-        if (attackTimer > nextTimeAttack)
+        if (inputValue && attackTimer > nextTimeAttack)
         {
             // Do attack logic and play animation
-            weapon.SetActive(true);
             Debug.Log("Player attacks!");
+            PlayWeaponSwing(attackCooldown);
 
             // set cooldown for the next attack
             nextTimeAttack = attackCooldown + Time.time;
         }
-        else
-        {
-            weapon.SetActive(false);
-        }
+
+        // if (attackTimer > nextTimeAttack)
+        // {
+        //     // Do attack logic and play animation
+        //     Debug.Log("Player attacks!");
+
+        //     // set cooldown for the next attack
+        //     nextTimeAttack = attackCooldown + Time.time;
+        // }
     }
 
-    private IEnumerator AttackAnimRoutine()
+    private void PlayWeaponSwing(float? duration = null)
     {
-        yield return null;
+        if (attackRoutine != null) attackRoutine = null;
+        attackRoutine = StartCoroutine(WeaponSwingRoutine(duration));
+    }
+
+    private IEnumerator WeaponSwingRoutine(float? newDuration = null)
+    {
+        float time = 0;
+        float duration = newDuration ?? defaultSwingDuration;
+
+        while (time < duration)
+        {
+            equipedWeapon.transform.rotation = Quaternion.Lerp(
+                handRight.rotation, handLeft.rotation, time / duration);
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+        
+        equipedWeapon.transform.rotation = handLeft.rotation;
     }
 }

@@ -1,6 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5.0f;

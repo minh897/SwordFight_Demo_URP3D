@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerCombat))]
 public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     public Vector2 MoveInput { get; private set; }
