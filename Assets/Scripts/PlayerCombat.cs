@@ -5,87 +5,87 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     // references
-    [SerializeField] private GameObject weaponDefaultPrefab;
-    [SerializeField] private Transform handLeft;
-    [SerializeField] private Transform handRight;
+    [SerializeField] private GameObject mainWeapon;
     [SerializeField] private Transform pivotPoint;
 
     // settings
-    [SerializeField] private float damage = 5.0f;
+    [SerializeField] private float weaponDamage = 5.0f;
     [SerializeField] private float attackCooldown = 0.5f;
-    [SerializeField] private float defaultSwingDuration = 0.1f;
+    [SerializeField] private float swingDuration = 0.1f;
+    [SerializeField] private float weaponSwingAngle = 180f;
 
     private PlayerInputHandler _inputHandler;
-    private GameObject equipedWeapon;
-    private Coroutine attackRoutine;
+    private Coroutine weaponSwingRoutine;
+
+    public bool isAttacking = false;
     
     // attack timers
-    private float attackTimer;
-    private float nextTimeAttack;
+    private float attackTimer = 0f;
+    private float nextTimeAttack = 0f;
+
+    private float currentYRotation;
+    private float targetYRotation;
+
 
     void Start()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
 
-        // handLeft.gameObject.SetActive(false);
-        // handRight.gameObject.SetActive(false);
-
-        EquipWeaponDefault(weaponDefaultPrefab, handRight);
-    }
-
-    private void EquipWeaponDefault(GameObject weaponPrefab, Transform equipHand)
-    {
-        equipedWeapon = Instantiate(weaponPrefab, transform, false);
-        equipedWeapon.transform.position = equipHand.position;
-        equipedWeapon.transform.forward = equipHand.right;
+        currentYRotation = mainWeapon.transform.localEulerAngles.y;
+        targetYRotation = currentYRotation + weaponSwingAngle;
     }
 
     void Update()
     {
         attackTimer = Time.time;
 
-        var inputValue = _inputHandler.AttackInput;
+        if (_inputHandler.AttackInput && attackTimer > nextTimeAttack)
+            isAttacking = true;
 
-        if (inputValue && attackTimer > nextTimeAttack)
+        if (isAttacking)
         {
-            // Do attack logic and play animation
-            Debug.Log("Player attacks!");
-            PlayWeaponSwing(attackCooldown);
-
-            // set cooldown for the next attack
+            isAttacking = false;
             nextTimeAttack = attackCooldown + Time.time;
+
+            Debug.Log("Player attack");
+            // player attacking animation
+            SwingWeapon(mainWeapon.transform);
         }
-
-        // if (attackTimer > nextTimeAttack)
-        // {
-        //     // Do attack logic and play animation
-        //     Debug.Log("Player attacks!");
-
-        //     // set cooldown for the next attack
-        //     nextTimeAttack = attackCooldown + Time.time;
-        // }
     }
 
-    private void PlayWeaponSwing(float? duration = null)
+    public void SwingWeapon(Transform weaponTransform)
     {
-        if (attackRoutine != null) attackRoutine = null;
-        attackRoutine = StartCoroutine(WeaponSwingRoutine(duration));
+        if (weaponSwingRoutine != null)
+            weaponSwingRoutine = null;
+
+        weaponSwingRoutine = StartCoroutine(WeaponSwingRoutine(weaponTransform));
     }
 
-    private IEnumerator WeaponSwingRoutine(float? newDuration = null)
+    private IEnumerator WeaponSwingRoutine(Transform weapon)
     {
-        float time = 0;
-        float duration = newDuration ?? defaultSwingDuration;
+        float elapsed = 0f;
+        float startY = currentYRotation;
+        float endY = targetYRotation;
+        Quaternion targetRot = Quaternion.Euler(0, targetYRotation, 0);
 
-        while (time < duration)
+        while (elapsed < swingDuration)
         {
-            equipedWeapon.transform.rotation = Quaternion.Lerp(
-                handRight.rotation, handLeft.rotation, time / duration);
+            elapsed += Time.deltaTime;
 
-            time += Time.deltaTime;
+            // converts time into a normalized progress value
+            // and then clamp that progress between 0 and 1 
+            // (prevent that value to hit 0.2 or 1.1 something like that)
+            float t = Mathf.Clamp01(elapsed / swingDuration);
+            float yRot = Mathf.Lerp(startY, endY, t);
+            weapon.localRotation = Quaternion.Euler(0, yRot, 0);
+
             yield return null;
         }
-        
-        equipedWeapon.transform.rotation = handLeft.rotation;
+        // make sure the rotation hit the target
+        // prevent undershoot or overshoot by Lerp
+        weapon.localRotation = targetRot;
+        // swap angle for next swing
+        currentYRotation = endY;
+        targetYRotation = startY;
     }
 }

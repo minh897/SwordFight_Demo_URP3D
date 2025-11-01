@@ -25,14 +25,14 @@ public class PlayerMovement : MonoBehaviour
     {
         // read input from PlayerInputHandler
         _moveDir = new(_inputHandler.MoveInput.x, 0, _inputHandler.MoveInput.y);
-        
+
         // record the player last position only there are movements
         // allow rotation to continue even when the moving input is zero 
         _currentPos = _moveDir;
         if (_moveDir.sqrMagnitude > 0.0001f) // this allow more control of the rotation
         {
             _lastPos = _currentPos;
-        } 
+        }
         Quaternion targetRotation = Quaternion.LookRotation(_lastPos);
         // rotate the player facing moving direction smoothly
         Quaternion newRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
