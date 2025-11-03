@@ -24,12 +24,12 @@ public class EnemyFollow : MonoBehaviour
         _rb.MovePosition(_rb.position + followSpeed * Time.fixedDeltaTime * targetPosition);
 
         // rotating logic
+        // enemy can only rotate smoothly along the horizontal axis
+        // give it a more natural feel than just move to target rotation immediately
         var lookDirection = followTarget.position - _rb.position;
         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-        float startY = transform.localEulerAngles.y;
-        float endY = targetRotation.eulerAngles.y;
         float t = Mathf.Clamp01(Time.fixedDeltaTime * rotateSpeed);
-        float yRot = Mathf.LerpAngle(startY, endY, t);
+        float yRot = Mathf.LerpAngle(transform.localEulerAngles.y, targetRotation.eulerAngles.y, t);
         Quaternion newRotation = Quaternion.Euler(0, yRot, 0);
         _rb.MoveRotation(newRotation);
     }
