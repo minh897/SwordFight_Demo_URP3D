@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rb;
 
     private Vector3 _moveDir;
-    private Vector3 _currentPos;
-    private Vector3 _lastPos;
+    private Vector3 _currentDir;
+    private Vector3 _lastDir;
     
     void Start()
     {
@@ -26,21 +26,22 @@ public class PlayerMovement : MonoBehaviour
         // read input from PlayerInputHandler
         _moveDir = new(_inputHandler.MoveInput.x, 0, _inputHandler.MoveInput.y);
 
+        // move the player to target position
+        Vector3 targetPosition = _rb.position + moveSpeed * Time.fixedDeltaTime * _moveDir;
+        _rb.MovePosition(targetPosition);
+
         // record the player last position only there are movements
-        // allow rotation to continue even when the moving input is zero 
-        _currentPos = _moveDir;
+        // allow rotation to continue even when input is zero 
+        _currentDir = _moveDir;
         if (_moveDir.sqrMagnitude > 0.0001f) // this allow more control of the rotation
         {
-            _lastPos = _currentPos;
+            _lastDir = _currentDir;
         }
-        Quaternion targetRotation = Quaternion.LookRotation(_lastPos);
-        // rotate the player facing moving direction smoothly
+        Quaternion targetRotation = Quaternion.LookRotation(_lastDir);
+        // smoothly interpolate player rotation toward moving direction
         Quaternion newRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         _rb.MoveRotation(newRotation);
 
-        // move the player rigidbody via Rigidbody.MovePosition()
-        Vector3 targetPosition = _rb.position + moveSpeed * Time.fixedDeltaTime * _moveDir;
-        _rb.MovePosition(targetPosition);
     }
 
     void OnDrawGizmos()

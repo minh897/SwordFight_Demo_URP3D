@@ -6,10 +6,10 @@ public class HitDetection : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // because the collider is within the child object
-        // we need its parent transform in order to get component
-        // implemented the IDamageable interface 
-        var otherParent = other.transform.parent.gameObject;
+        // because other collider is a child object
+        // we need its parent transform in order to get
+        // the IDamageable interface 
+        var otherParent = other.transform.parent;
 
         if (otherParent.TryGetComponent(out IDamageable damageableObject))
         {

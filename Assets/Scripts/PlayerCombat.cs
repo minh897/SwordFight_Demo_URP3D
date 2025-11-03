@@ -74,7 +74,7 @@ public class PlayerCombat : MonoBehaviour
 
         while (elapsed < swingDuration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.fixedDeltaTime;
 
             // converts time into a normalized progress value
             // and then clamp that progress between 0 and 1 
