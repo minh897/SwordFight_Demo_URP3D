@@ -5,17 +5,16 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     // references
-    [SerializeField] private GameObject mainWeapon;
-    [SerializeField] private Transform pivotPoint;
+    [SerializeField] private GameObject _mainWeapon;
 
     // settings
-    [SerializeField] private float weaponDamage = 5.0f;
     [SerializeField] private float attackCooldown = 0.5f;
     [SerializeField] private float swingDuration = 0.1f;
     [SerializeField] private float weaponSwingAngle = 180f;
 
     private PlayerInputHandler _inputHandler;
     private Coroutine weaponSwingRoutine;
+    private BoxCollider weaponCollider;
 
     public bool isAttacking = false;
     
@@ -30,8 +29,10 @@ public class PlayerCombat : MonoBehaviour
     void Start()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
+        weaponCollider = _mainWeapon.GetComponentInChildren<BoxCollider>();
 
-        currentYRotation = mainWeapon.transform.localEulerAngles.y;
+        weaponCollider.enabled = false;
+        currentYRotation = _mainWeapon.transform.localEulerAngles.y;
         targetYRotation = currentYRotation + weaponSwingAngle;
     }
 
@@ -40,7 +41,10 @@ public class PlayerCombat : MonoBehaviour
         attackTimer = Time.time;
 
         if (_inputHandler.AttackInput && attackTimer > nextTimeAttack)
+        {
             isAttacking = true;
+            weaponCollider.enabled = true;
+        }
 
         if (isAttacking)
         {
@@ -49,7 +53,7 @@ public class PlayerCombat : MonoBehaviour
 
             Debug.Log("Player attack");
             // player attacking animation
-            SwingWeapon(mainWeapon.transform);
+            SwingWeapon(_mainWeapon.transform);
         }
     }
 
@@ -82,10 +86,11 @@ public class PlayerCombat : MonoBehaviour
             yield return null;
         }
         // make sure the rotation hit the target
-        // prevent undershoot or overshoot by Lerp
         weapon.localRotation = targetRot;
         // swap angle for next swing
         currentYRotation = endY;
         targetYRotation = startY;
+        // disable collider to prevent out-of-swing detection
+        weaponCollider.enabled = false;
     }
 }
