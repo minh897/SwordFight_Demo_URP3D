@@ -12,6 +12,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float attackCooldown = 0.5f;
     [SerializeField] private float swingDuration = 0.1f;
     [SerializeField] private float lungeDuration = 0.5f;
+    [SerializeField] private float lungeDistance = 1f;
     [SerializeField] private float weaponSwingAngle = 180f;
 
     private PlayerInputHandler inputHandler;
@@ -117,15 +118,14 @@ public class PlayerCombat : MonoBehaviour
     private IEnumerator LungeForwardRoutine()
     {
         float elapsed = 0f;
-        float lungDistance = 1f;
         Vector3 startPos = transform.position;
-        Vector3 direction = transform.forward * lungDistance;
+        Vector3 direction = transform.forward * lungeDistance;
         Vector3 endPos = transform.position + direction;
         
         while (elapsed < lungeDuration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / 0.5f;
+            float t = elapsed / lungeDuration;
             var towardPosition = Vector3.Lerp(startPos, endPos, t);
             transform.position = towardPosition;
 
