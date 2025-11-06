@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
         // smoothly interpolate player rotation toward moving direction
         Quaternion newRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         _rb.MoveRotation(newRotation);
-
     }
 
     void OnDrawGizmos()

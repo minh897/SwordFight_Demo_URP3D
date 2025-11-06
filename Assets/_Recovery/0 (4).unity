@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &100713048 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4523825613888272602, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-  m_PrefabInstance: {fileID: 2085059800130787258}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &129108215
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,6 +649,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1144733335 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4523825613888272602, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
+  m_PrefabInstance: {fileID: 2085059800130787258}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1253874822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,25 +1193,17 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4001672385670016150, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4001672385670016150, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-      propertyPath: m_Interpolate
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4001672385670016150, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4723552377478809943, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: moveSpeed
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5530694406507084727, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: mainWeapon
       value: 
-      objectReference: {fileID: 100713048}
+      objectReference: {fileID: 1144733335}
     - target: {fileID: 5530694406507084727, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: swingDuration
       value: 0.1

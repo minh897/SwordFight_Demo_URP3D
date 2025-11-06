@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
             isRestart = false;
             Restart();
         }
+        // TODO: Find a way to read input without directly using InputSystem
         if (isGamePause)
         {
             Debug.Log("Game is pause");
