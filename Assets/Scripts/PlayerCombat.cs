@@ -8,27 +8,26 @@ public class PlayerCombat : MonoBehaviour
     // references
     [SerializeField] private GameObject mainWeapon;
 
-    // settings
+    // weapon settings
     [SerializeField] private float attackCooldown = 0.5f;
-    [SerializeField] private float swingDuration = 0.1f;
-    [SerializeField] private float lungeDuration = 0.5f;
+    // [SerializeField] private float attackDuration = 0.3f;
+    [SerializeField] private float swingDuration = 0.3f;
+    [SerializeField] private float lungeDuration = 0.2f;
+    [SerializeField] private float swingYAngle = -180f;
     [SerializeField] private float lungeDistance = 1f;
-    [SerializeField] private float weaponSwingAngle = 180f;
 
     private PlayerInputHandler inputHandler;
     private BoxCollider weaponCollider;
-    private Coroutine weaponSwingRoutine;
-    private Coroutine lungeForwadRoutine;
+    private Coroutine attackAnimationCo;
 
-    public bool isAttacking = false;
-    
+    private bool isAttacking = false;
+
     // attack timers
     private float attackTimer = 0f;
     private float nextTimeAttack = 0f;
 
-    private float currentYRotation;
-    private float targetYRotation;
-
+    private float currentYAngle;
+    private float targetYAngle;
 
     void Start()
     {
@@ -36,72 +35,65 @@ public class PlayerCombat : MonoBehaviour
         weaponCollider = mainWeapon.GetComponentInChildren<BoxCollider>();
 
         weaponCollider.enabled = false;
-        currentYRotation = mainWeapon.transform.localEulerAngles.y;
-        targetYRotation = currentYRotation + weaponSwingAngle;
+        currentYAngle = mainWeapon.transform.localEulerAngles.y;
+        targetYAngle = currentYAngle + swingYAngle;
     }
 
     void Update()
     {
         attackTimer = Time.time;
 
+        // stop receiving input when attack is performed
+        if (isAttacking) return;
+
         if (inputHandler.AttackInput && attackTimer > nextTimeAttack)
         {
-            isAttacking = true;
-            weaponCollider.enabled = true;
             nextTimeAttack = attackCooldown + Time.time;
+
             Debug.Log("Player attack");
-
-            // disable movement input using PlayerInputHandler
-            inputHandler.GetMoveAction().Disable();
-            // play attack animation coroutine
-            SwingWeapon();
-            // play lunge forward animation coroutine
-            LungeForward();
-        }
-
-        if (!isAttacking)
-        {
-            // disable collider to prevent out-of-swing detection
-            weaponCollider.enabled = false;
-            // enable movement input back when both animation is done
-            inputHandler.GetMoveAction().Enable();
+            PlayAttackAnimation(swingDuration, lungeDuration);
         }
     }
 
-    public void SwingWeapon()
-    {
-        if (weaponSwingRoutine != null)
-            weaponSwingRoutine = null;
+    public bool IsAttacking() => isAttacking;
 
-        mainWeapon.GetComponent<Rigidbody>();
-        weaponSwingRoutine = StartCoroutine(WeaponSwingRoutine());
+    private void PlayAttackAnimation(float swingDuration, float lungeDuration)
+    {
+        // make sure only one coroutine is running
+        // prevent one coroutine running multiple times
+        if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
+        attackAnimationCo = StartCoroutine(AttackAnimationRoutine(swingDuration, lungeDuration));
     }
 
-    public void LungeForward()
+    private IEnumerator AttackAnimationRoutine(float swingDuration, float lungeDuration)
     {
-        if (lungeForwadRoutine != null)
-            lungeForwadRoutine = null;
+        isAttacking = true;
+        // enable weapon collider in order to "hit" enemies
+        weaponCollider.enabled = true;
+         
+        StartCoroutine(LungeForwardRoutine(lungeDuration));
+        yield return StartCoroutine(WeaponSwingRoutine(swingDuration));
 
-        lungeForwadRoutine = StartCoroutine(LungeForwardRoutine());
+        isAttacking = false;
+        // disable weapon collider to prevent "out-of-swing" colliding
+        weaponCollider.enabled = false;
     }
 
-    private IEnumerator WeaponSwingRoutine()
+    private IEnumerator WeaponSwingRoutine(float duration)
     {
         float elapsed = 0f;
-        float startY = currentYRotation;
-        float endY = targetYRotation;
+        float startYAngle = currentYAngle;
+        float endYAngle = targetYAngle;
 
-        Quaternion targetRot = Quaternion.Euler(0, endY, 0);
-
-        while (elapsed < swingDuration)
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
 
             // converts time into a normalized progress value
             // and then clamp that progress between 0 and 1 
-            // (prevent that value to hit 0.2 or 1.1 something like that)
-            float t = Mathf.Clamp01(elapsed / swingDuration);
-            float yRot = Mathf.Lerp(startY, endY, t);
+            // (prevent it to hit 0.2 or 1.1 something like that)
+            float t = Mathf.Clamp01(elapsed / duration);
+            float yRot = Mathf.Lerp(startYAngle, endYAngle, t);
             Quaternion newRot = Quaternion.Euler(0, yRot, 0);
             mainWeapon.transform.localRotation = newRot;
 
@@ -109,42 +101,30 @@ public class PlayerCombat : MonoBehaviour
         }
 
         // make sure the rotation hit the target
-        mainWeapon.transform.localRotation = targetRot;
+        mainWeapon.transform.localRotation = Quaternion.Euler(0, endYAngle, 0);
         // swap angle for next swing
-        currentYRotation = endY;
-        targetYRotation = startY;
+        currentYAngle = endYAngle;
+        targetYAngle = startYAngle;
     }
 
-    private IEnumerator LungeForwardRoutine()
+    private IEnumerator LungeForwardRoutine(float duration)
     {
         float elapsed = 0f;
         Vector3 startPos = transform.position;
         Vector3 direction = transform.forward * lungeDistance;
-        Vector3 endPos = transform.position + direction;
-        
-        while (elapsed < lungeDuration)
+        Vector3 endPos = startPos + direction;
+
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / lungeDuration;
-            var towardPosition = Vector3.Lerp(startPos, endPos, t);
+            float t = Mathf.Clamp01(elapsed / duration);
+            Vector3 towardPosition = Vector3.Lerp(startPos, endPos, t);
             transform.position = towardPosition;
 
-            // wait for the swing to finish
-            yield return weaponSwingRoutine;
+            yield return null;
         }
 
-        isAttacking = false;
+        transform.position = endPos;
     }
 
-    void OnDrawGizmos()
-    {
-        if (!Application.isPlaying) return;
-
-        var lungDistance = 1f;
-        var direction = transform.forward * lungDistance;
-        var targetPosition = transform.position + direction;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, targetPosition);
-    }
 }

@@ -8,16 +8,16 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     public bool AttackInput { get; private set; }
 
     private PlayerInput playerInput;
-    // private PlayerMovement m_Movement;
-    // private PlayerCombat m_Combat;
+    private PlayerMovement _movement;
+    private PlayerCombat _combat;
 
     private InputAction moveAction;
 
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        // m_Movement = GetComponent<PlayerMovement>();
-        // m_Combat = GetComponent<PlayerCombat>();
+        _movement = GetComponent<PlayerMovement>();
+        _combat = GetComponent<PlayerCombat>();
     }
 
     void Start()
@@ -38,4 +38,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     }
 
     public InputAction GetMoveAction() => moveAction;
+
+    public PlayerCombat GetPlayerCombat() => _combat;
 }

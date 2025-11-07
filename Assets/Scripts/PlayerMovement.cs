@@ -8,39 +8,42 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float rotateSpeed = 5.0f;
 
-    private PlayerInputHandler _inputHandler;
-    private Rigidbody _rb;
+    private PlayerInputHandler inputHandler;
+    private Rigidbody rb;
 
-    private Vector3 _moveDir;
-    private Vector3 _currentDir;
-    private Vector3 _lastDir;
+    private Vector3 moveDir;
+    private Vector3 currentDir;
+    private Vector3 lastDir;
     
     void Start()
     {
-        _inputHandler = GetComponent<PlayerInputHandler>();
-        _rb = GetComponent<Rigidbody>();
+        inputHandler = GetComponent<PlayerInputHandler>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
     {
+        // stop receiving input when attack is performed
+        if (inputHandler.GetPlayerCombat().IsAttacking()) return;
+
         // read input from PlayerInputHandler
-        _moveDir = new(_inputHandler.MoveInput.x, 0, _inputHandler.MoveInput.y);
+        moveDir = new(inputHandler.MoveInput.x, 0, inputHandler.MoveInput.y);
 
         // move the player to target position
-        Vector3 targetPosition = _rb.position + moveSpeed * Time.fixedDeltaTime * _moveDir;
-        _rb.MovePosition(targetPosition);
+        Vector3 targetPosition = rb.position + moveSpeed * Time.fixedDeltaTime * moveDir;
+        rb.MovePosition(targetPosition);
 
         // record the player last position only there are movements
         // allow rotation to continue even when input is zero 
-        _currentDir = _moveDir;
-        if (_moveDir.sqrMagnitude > 0.0001f) // this allow more control of the rotation
+        currentDir = moveDir;
+        if (moveDir.sqrMagnitude > 0.0001f) // this allow more control of the rotation
         {
-            _lastDir = _currentDir;
+            lastDir = currentDir;
         }
-        Quaternion targetRotation = Quaternion.LookRotation(_lastDir);
+        Quaternion targetRotation = Quaternion.LookRotation(lastDir);
         // smoothly interpolate player rotation toward moving direction
-        Quaternion newRotation = Quaternion.Lerp(_rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
-        _rb.MoveRotation(newRotation);
+        Quaternion newRotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
+        rb.MoveRotation(newRotation);
     }
 
     void OnDrawGizmos()
