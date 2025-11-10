@@ -1,20 +1,24 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
 public class HitDetection : MonoBehaviour
 {
-    [SerializeField] private int weaponDamage;
+    private Health myWellBeing;
+
+    void Start()
+    {
+        myWellBeing = GetComponent<Health>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        // because other collider is a child object
-        // we need its parent transform in order to get
-        // the IDamageable interface 
-        var otherParent = other.transform.parent;
-
-        if (otherParent.TryGetComponent(out IDamageable damageableObject))
+        // check if the colliding object is a weapon
+        if (other.CompareTag("Weapon"))
         {
-            Debug.Log("Hit target OnTriggerEnter");
-            damageableObject.TakeDamage(weaponDamage);
+            // get weapon damage from PlayerCombat
+            int damage = other.GetComponentInParent<PlayerCombat>().GetWeaponDamage();
+            // receive damage through IDamageable
+            myWellBeing.TakeDamage(damage);
         }
     }
 }

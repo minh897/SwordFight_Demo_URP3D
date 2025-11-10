@@ -24,7 +24,7 @@ public class Health : MonoBehaviour, IDamageable
         if (currentHealth <= 0)
         {
             Die();
-            // trigger win condition when enemy is die
+            // check for win or lose condition whenever player or an enemy die
             gameManager.CheckWinLoseCondition(gameObject);
         }
     }

@@ -4,11 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
-
     // references
     [SerializeField] private GameObject mainWeapon;
 
     // weapon settings
+    [SerializeField] private int weaponDamage = 10;
     [SerializeField] private float attackCooldown = 0.5f;
     // [SerializeField] private float attackDuration = 0.3f;
     [SerializeField] private float swingDuration = 0.3f;
@@ -63,6 +63,8 @@ public class PlayerCombat : MonoBehaviour
     }
 
     public bool IsAttacking() => isAttacking;
+
+    public int GetWeaponDamage() => weaponDamage;
 
     private void PlayAttackAnimation(float swingDuration, float lungeDuration)
     {

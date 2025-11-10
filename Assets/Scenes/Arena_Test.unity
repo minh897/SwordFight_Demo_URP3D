@@ -1383,11 +1383,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5530694406507084727, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: lungeDistance
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5530694406507084727, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: lungeDuration
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5530694406507084727, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: stretchZScale

@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7847448758086520596}
   - component: {fileID: 4325979857711780762}
   - component: {fileID: 7294141662143326190}
+  - component: {fileID: 6737465868347739629}
+  - component: {fileID: 1526531444067943883}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -76,6 +78,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 40
   currentHealth: 0
+--- !u!114 &6737465868347739629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ef40c9dbf10fb9abdb0d7078f1e380, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  followSpeed: 5
+  rotateSpeed: 5
+--- !u!114 &1526531444067943883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitDetection
+  weaponDamage: 0
 --- !u!1 &7071625472354980155
 GameObject:
   m_ObjectHideFlags: 0
