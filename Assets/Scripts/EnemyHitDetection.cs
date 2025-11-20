@@ -6,9 +6,11 @@ public class EnemyHitDetection : MonoBehaviour
 {
     [SerializeField] private float stunDuration;
     [SerializeField] private float pushDuration;
+    [SerializeField] private float leanDuration;
+    [SerializeField] private float shrinkDuration;
     [SerializeField] private float pushBackDistance;
-    [SerializeField] private float pivotDuration;
-    [SerializeField] private Vector3 pivotAngle;
+    [SerializeField] private Vector3 leanAngle;
+    [SerializeField] private Vector3 shrinkScale;
 
     private Health myWellBeing;
 
@@ -17,13 +19,17 @@ public class EnemyHitDetection : MonoBehaviour
 
     private float currentAngleX;
     private float targetAngleX;
+    private Vector3 currentScale;
+    private Vector3 targetScale;
 
     void Start()
     {
         myWellBeing = GetComponent<Health>();
 
         currentAngleX = transform.localRotation.x;
-        targetAngleX = currentAngleX + pivotAngle.x;
+        targetAngleX = currentAngleX + leanAngle.x;
+        currentScale = transform.localScale;
+        targetScale = currentScale + shrinkScale;
     }
 
     void OnTriggerEnter(Collider other)
@@ -52,13 +58,15 @@ public class EnemyHitDetection : MonoBehaviour
         // receive damage through IDamageable
         myWellBeing.TakeDamage(damage);
 
-        // var pushRoutine = StartCoroutine(GetPushBackRoutine(pushDuration, direction));
-        yield return StartCoroutine(GetPivotRoutine(pivotDuration));
+        var pushRoutine = StartCoroutine(PushBackRoutine(pushDuration));
+        StartCoroutine(LeanBackwardRoutine(leanDuration));
+        StartCoroutine(ShrinkRoutine(shrinkDuration));
+        yield return pushRoutine;
 
         isStunned = false;
     }
 
-    private IEnumerator GetPushBackRoutine(float duration)
+    private IEnumerator PushBackRoutine(float duration)
     {
         float elapsed = 0f;
         // get enemy direction
@@ -83,7 +91,7 @@ public class EnemyHitDetection : MonoBehaviour
         transform.position = endPos;
     }
 
-    private IEnumerator GetPivotRoutine(float duration)
+    private IEnumerator LeanBackwardRoutine(float duration)
     {
         float elapsed = 0f;
         float startAngleX = currentAngleX;
@@ -109,6 +117,36 @@ public class EnemyHitDetection : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / returnDuration);
             float newAngleX = Mathf.LerpAngle(endAngleX, startAngleX, t);
             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
+            yield return null;
+        }
+    }
+
+    private IEnumerator ShrinkRoutine(float duration)
+    {
+        float elapsed = 0f;
+        float initialDuration = duration * 0.5f;
+        float returnDuration = duration - initialDuration;
+        Vector3 startScale = currentScale;
+        Vector3 endScale = targetScale;
+
+        // phase 1: interpolate from default to target
+        while (elapsed < initialDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / initialDuration);
+            var result = Vector3.Lerp(startScale, endScale, t);
+            transform.localScale = result;
+            yield return null;
+        }
+
+        // phase2: return from target back to default
+        elapsed = 0;
+        while (elapsed < returnDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / initialDuration);
+            var result = Vector3.Lerp(endScale, currentScale, t);
+            transform.localScale = result;
             yield return null;
         }
     }

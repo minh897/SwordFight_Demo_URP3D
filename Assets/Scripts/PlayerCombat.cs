@@ -12,10 +12,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float attackCooldown = 0.5f;
     // [SerializeField] private float attackDuration = 0.3f;
     [SerializeField] private float swingDuration = 0.3f;
+    [SerializeField] private float overshootYAngle = -30f;
     [SerializeField] private Vector3 swingAngle;
     [SerializeField] private float lungeDuration = 0.2f;
     [SerializeField] private float lungeDistance = 1f;
-    [SerializeField] private float overshootYAngle = -30f;
     [SerializeField] private Vector3 stretchScale;
 
     private PlayerInputHandler inputHandler;
@@ -158,8 +158,8 @@ public class PlayerCombat : MonoBehaviour
 
     private IEnumerator ScaleWeaponRoutine(float duration)
     {
-        float halfDuration = duration * 0.7f; // main swing uses ~70% of total time
-        float returnDuration = duration - halfDuration; // remaining time for return
+        float halfDuration = duration * 0.7f;
+        float returnDuration = duration - halfDuration;
 
         float elapsed = 0f;
         float startZScale = currentZScale;
