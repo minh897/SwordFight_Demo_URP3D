@@ -88,15 +88,28 @@ public class EnemyHitDetection : MonoBehaviour
         float elapsed = 0f;
         float startAngleX = currentAngleX;
         float endAngleX = targetAngleX;
+        float halfDuration = duration * 0.5f;
+        float returnDuration = duration - halfDuration;
 
-        while (elapsed < duration)
+        // phase 1: pivot backward
+        while (elapsed < halfDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            float t = Mathf.Clamp01(elapsed / halfDuration);
             float newAngleX = Mathf.LerpAngle(startAngleX, endAngleX, t);
             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
             yield return null;
         }
 
+        // phase2: return to normal rotation
+        elapsed = 0;
+        while (elapsed < returnDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / returnDuration);
+            float newAngleX = Mathf.LerpAngle(endAngleX, startAngleX, t);
+            transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
+            yield return null;
+        }
     }
 }
