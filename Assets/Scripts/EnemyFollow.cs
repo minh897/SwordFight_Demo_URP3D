@@ -4,10 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyHitDetection))]
 public class EnemyFollow : MonoBehaviour
 {
+    [SerializeField] private Transform followTarget;
     [SerializeField] private float followSpeed;
     [SerializeField] private float rotateSpeed;
 
-    private Transform followTarget;
     private Rigidbody _rb;
     private EnemyHitDetection hitDetection;
     private Vector3 direction;
@@ -16,8 +16,6 @@ public class EnemyFollow : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         hitDetection = GetComponent<EnemyHitDetection>();
-        var tmp = FindFirstObjectByType<PlayerInputHandler>();
-        followTarget = tmp.gameObject.transform;
     }
 
     void Update()

@@ -58,10 +58,10 @@ public class EnemyHitDetection : MonoBehaviour
         // receive damage through IDamageable
         myWellBeing.TakeDamage(damage);
 
-        var pushRoutine = StartCoroutine(PushBackRoutine(pushDuration));
-        StartCoroutine(LeanBackwardRoutine(leanDuration));
-        StartCoroutine(ShrinkRoutine(shrinkDuration));
-        yield return pushRoutine;
+        // var pushRoutine = StartCoroutine(PushBackRoutine(pushDuration));
+        // StartCoroutine(LeanBackwardRoutine(leanDuration));
+        yield return StartCoroutine(ShrinkRoutine(1));
+        // yield return pushRoutine;
 
         isStunned = false;
     }
@@ -94,10 +94,10 @@ public class EnemyHitDetection : MonoBehaviour
     private IEnumerator LeanBackwardRoutine(float duration)
     {
         float elapsed = 0f;
-        float startAngleX = currentAngleX;
-        float endAngleX = targetAngleX;
         float halfDuration = duration * 0.5f;
         float returnDuration = duration - halfDuration;
+        float startAngleX = currentAngleX;
+        float endAngleX = targetAngleX;
 
         // phase 1: pivot backward
         while (elapsed < halfDuration)
@@ -124,8 +124,9 @@ public class EnemyHitDetection : MonoBehaviour
     private IEnumerator ShrinkRoutine(float duration)
     {
         float elapsed = 0f;
-        float initialDuration = duration * 0.5f;
+        float initialDuration = duration * 0.8f;
         float returnDuration = duration - initialDuration;
+
         Vector3 startScale = currentScale;
         Vector3 endScale = targetScale;
 
@@ -150,4 +151,69 @@ public class EnemyHitDetection : MonoBehaviour
             yield return null;
         }
     }
+
+    // private IEnumerator CombineRoutine(float duration)
+    // {
+    //     // enemy shrink for a brief moment
+    //     // then stretch up at the same time as the lean
+    //     // then return to normal scale
+    //     float elapsed = 0f;
+    //     float initialDuration = duration * 0.5f;
+    //     float returnDuration = duration - initialDuration;
+
+    //     // Lean Routine
+    //     {
+    //         float startAngleX = currentAngleX;
+    //         float endAngleX = targetAngleX;
+
+    //         // phase 1: pivot backward
+    //         while (elapsed < initialDuration)
+    //         {
+    //             elapsed += Time.deltaTime;
+    //             float t = Mathf.Clamp01(elapsed / initialDuration);
+    //             float newAngleX = Mathf.LerpAngle(startAngleX, endAngleX, t);
+    //             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
+    //             yield return null;
+    //         }
+
+    //         // phase2: return to normal rotation
+    //         elapsed = 0;
+    //         while (elapsed < returnDuration)
+    //         {
+    //             elapsed += Time.deltaTime;
+    //             float t = Mathf.Clamp01(elapsed / returnDuration);
+    //             float newAngleX = Mathf.LerpAngle(endAngleX, startAngleX, t);
+    //             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
+    //             yield return null;
+    //         }
+    //     }
+
+    //     // Shrink Routine
+    //     {
+    //         Vector3 startScale = currentScale;
+    //         Vector3 endScale = targetScale;
+
+    //         elapsed = 0;
+    //         // phase 1: interpolate from default to target
+    //         while (elapsed < initialDuration)
+    //         {
+    //             elapsed += Time.deltaTime;
+    //             float t = Mathf.Clamp01(elapsed / initialDuration);
+    //             var result = Vector3.Lerp(startScale, endScale, t);
+    //             transform.localScale = result;
+    //             yield return null;
+    //         }
+
+    //         // phase2: return from target back to default
+    //         elapsed = 0;
+    //         while (elapsed < returnDuration)
+    //         {
+    //             elapsed += Time.deltaTime;
+    //             float t = Mathf.Clamp01(elapsed / initialDuration);
+    //             var result = Vector3.Lerp(endScale, currentScale, t);
+    //             transform.localScale = result;
+    //             yield return null;
+    //         }
+    //     }
+    // }
 }

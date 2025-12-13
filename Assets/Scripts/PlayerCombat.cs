@@ -6,6 +6,7 @@ public class PlayerCombat : MonoBehaviour
 {
     // references
     [SerializeField] private GameObject mainWeapon;
+    [SerializeField] private ParticleSystem vfxSwordSlash;
 
     // weapon settings
     [SerializeField] private int weaponDamage = 10;
@@ -79,7 +80,8 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = true;
         // enable weapon collider in order to "hit" enemies
         weaponCollider.enabled = true;
-
+        vfxSwordSlash.gameObject.SetActive(true);
+        
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
         StartCoroutine(ScaleWeaponRoutine(swingDuration));
@@ -88,6 +90,7 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
         // disable weapon collider to prevent "out-of-swing" colliding
         weaponCollider.enabled = false;
+        vfxSwordSlash.gameObject.SetActive(false);
     }
 
     private IEnumerator WeaponSwingRoutine(float duration)

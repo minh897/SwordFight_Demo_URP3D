@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1687950070660205676
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3774941825815993882}
-  m_Layer: 0
-  m_Name: Pivot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3774941825815993882
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1687950070660205676}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7847448758086520596}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1785916658318261389
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,6 +13,7 @@ GameObject:
   - component: {fileID: 7294141662143326190}
   - component: {fileID: 6737465868347739629}
   - component: {fileID: 1526531444067943883}
+  - component: {fileID: 8809752827283777462}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -66,7 +36,6 @@ Transform:
   m_Children:
   - {fileID: 4807649141880601986}
   - {fileID: 6278260090116289385}
-  - {fileID: 3774941825815993882}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!54 &4325979857711780762
@@ -122,7 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ef40c9dbf10fb9abdb0d7078f1e380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  followSpeed: 0.2
+  followTarget: {fileID: 0}
+  followSpeed: 0
   rotateSpeed: 5
 --- !u!114 &1526531444067943883
 MonoBehaviour:
@@ -136,11 +106,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitDetection
-  pivotPoint: {fileID: 3774941825815993882}
-  stunDuration: 1
-  pushDuration: 0.5
-  pushBackDistance: 0.5
-  pivotDuration: 0
+  stunDuration: 0.6
+  pushDuration: 0.1
+  leanDuration: 0.3
+  shrinkDuration: 0.2
+  pushBackDistance: 0.4
+  leanAngle: {x: -45, y: 0, z: 0}
+  shrinkScale: {x: -0.2, y: -0.2, z: -0.2}
+--- !u!114 &8809752827283777462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f11fcfa372c760c185fa900599cde0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SquashAndStretch
+  transformToAffect: {fileID: 7847448758086520596}
+  axisToAffect: 2
+  animationDuration: 0.25
+  canBeOverwritten: 0
+  playOnStart: 0
+  playsEveryTime: 1
+  chanceToPlay: 100
+  initialScale: 1
+  maximumScale: 1.3
+  resetToInitialScaleAfterAnimation: 0
+  reverseAnimationCurveAfterPlaying: 0
+  squashAndStretchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.500885
+      value: 0.98910904
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7071625472354980155
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,8 +196,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7071625472354980155}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -280,9 +308,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8914888085795005444}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.455, z: 0.418}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1.455, z: 0.41800022}
+  m_LocalScale: {x: 0.40000007, y: 0.40000007, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7847448758086520596}
