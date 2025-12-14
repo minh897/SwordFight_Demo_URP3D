@@ -80,7 +80,7 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = true;
         // enable weapon collider in order to "hit" enemies
         weaponCollider.enabled = true;
-        vfxSwordSlash.gameObject.SetActive(true);
+        // vfxSwordSlash.gameObject.SetActive(true);
         
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
         // disable weapon collider to prevent "out-of-swing" colliding
         weaponCollider.enabled = false;
-        vfxSwordSlash.gameObject.SetActive(false);
+        // vfxSwordSlash.gameObject.SetActive(false);
     }
 
     private IEnumerator WeaponSwingRoutine(float duration)

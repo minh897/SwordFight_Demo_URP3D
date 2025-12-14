@@ -7,29 +7,25 @@ public class EnemyHitDetection : MonoBehaviour
     [SerializeField] private float stunDuration;
     [SerializeField] private float pushDuration;
     [SerializeField] private float leanDuration;
-    [SerializeField] private float shrinkDuration;
     [SerializeField] private float pushBackDistance;
     [SerializeField] private Vector3 leanAngle;
-    [SerializeField] private Vector3 shrinkScale;
 
     private Health myWellBeing;
+    private SquashAndStretch anim_SquashAndStretch;
 
     private bool isStunned = false;
     private Coroutine getHitRoutine;
 
     private float currentAngleX;
     private float targetAngleX;
-    private Vector3 currentScale;
-    private Vector3 targetScale;
 
     void Start()
     {
         myWellBeing = GetComponent<Health>();
+        anim_SquashAndStretch = GetComponent<SquashAndStretch>();
 
         currentAngleX = transform.localRotation.x;
         targetAngleX = currentAngleX + leanAngle.x;
-        currentScale = transform.localScale;
-        targetScale = currentScale + shrinkScale;
     }
 
     void OnTriggerEnter(Collider other)
@@ -37,31 +33,33 @@ public class EnemyHitDetection : MonoBehaviour
         // check if the colliding object has "Weapon" tag
         if (other.CompareTag("Weapon"))
         {
-            GetHitWith(other.gameObject);
+            PlayGetHit();
+            // get weapon damage from PlayerCombat
+            int damage = other.gameObject.
+                GetComponentInParent<PlayerCombat>().
+                GetWeaponDamage();
+            // receive damage through IDamageable
+            myWellBeing.TakeDamage(damage);
         }
     }
 
     public bool IsStunned() => isStunned;
 
-    private void GetHitWith(GameObject weapon)
+    private void PlayGetHit()
     {
         if (getHitRoutine != null) StopCoroutine(getHitRoutine);
-        getHitRoutine = StartCoroutine(GetHitRoutine(weapon));
+        getHitRoutine = StartCoroutine(GetHitRoutine());
     }
 
-    private IEnumerator GetHitRoutine(GameObject weapon)
+    private IEnumerator GetHitRoutine()
     {
         // start a countdown for stun durtation
         isStunned = true;
-        // get weapon damage from PlayerCombat
-        int damage = weapon.GetComponentInParent<PlayerCombat>().GetWeaponDamage();
-        // receive damage through IDamageable
-        myWellBeing.TakeDamage(damage);
 
-        // var pushRoutine = StartCoroutine(PushBackRoutine(pushDuration));
-        // StartCoroutine(LeanBackwardRoutine(leanDuration));
-        yield return StartCoroutine(ShrinkRoutine(1));
-        // yield return pushRoutine;
+        anim_SquashAndStretch.Play();
+        Coroutine waitForRoutine = StartCoroutine(PushBackRoutine(pushDuration));
+        StartCoroutine(LeanBackwardRoutine(leanDuration));
+        yield return waitForRoutine;
 
         isStunned = false;
     }
@@ -121,99 +119,4 @@ public class EnemyHitDetection : MonoBehaviour
         }
     }
 
-    private IEnumerator ShrinkRoutine(float duration)
-    {
-        float elapsed = 0f;
-        float initialDuration = duration * 0.8f;
-        float returnDuration = duration - initialDuration;
-
-        Vector3 startScale = currentScale;
-        Vector3 endScale = targetScale;
-
-        // phase 1: interpolate from default to target
-        while (elapsed < initialDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / initialDuration);
-            var result = Vector3.Lerp(startScale, endScale, t);
-            transform.localScale = result;
-            yield return null;
-        }
-
-        // phase2: return from target back to default
-        elapsed = 0;
-        while (elapsed < returnDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / initialDuration);
-            var result = Vector3.Lerp(endScale, currentScale, t);
-            transform.localScale = result;
-            yield return null;
-        }
-    }
-
-    // private IEnumerator CombineRoutine(float duration)
-    // {
-    //     // enemy shrink for a brief moment
-    //     // then stretch up at the same time as the lean
-    //     // then return to normal scale
-    //     float elapsed = 0f;
-    //     float initialDuration = duration * 0.5f;
-    //     float returnDuration = duration - initialDuration;
-
-    //     // Lean Routine
-    //     {
-    //         float startAngleX = currentAngleX;
-    //         float endAngleX = targetAngleX;
-
-    //         // phase 1: pivot backward
-    //         while (elapsed < initialDuration)
-    //         {
-    //             elapsed += Time.deltaTime;
-    //             float t = Mathf.Clamp01(elapsed / initialDuration);
-    //             float newAngleX = Mathf.LerpAngle(startAngleX, endAngleX, t);
-    //             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
-    //             yield return null;
-    //         }
-
-    //         // phase2: return to normal rotation
-    //         elapsed = 0;
-    //         while (elapsed < returnDuration)
-    //         {
-    //             elapsed += Time.deltaTime;
-    //             float t = Mathf.Clamp01(elapsed / returnDuration);
-    //             float newAngleX = Mathf.LerpAngle(endAngleX, startAngleX, t);
-    //             transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
-    //             yield return null;
-    //         }
-    //     }
-
-    //     // Shrink Routine
-    //     {
-    //         Vector3 startScale = currentScale;
-    //         Vector3 endScale = targetScale;
-
-    //         elapsed = 0;
-    //         // phase 1: interpolate from default to target
-    //         while (elapsed < initialDuration)
-    //         {
-    //             elapsed += Time.deltaTime;
-    //             float t = Mathf.Clamp01(elapsed / initialDuration);
-    //             var result = Vector3.Lerp(startScale, endScale, t);
-    //             transform.localScale = result;
-    //             yield return null;
-    //         }
-
-    //         // phase2: return from target back to default
-    //         elapsed = 0;
-    //         while (elapsed < returnDuration)
-    //         {
-    //             elapsed += Time.deltaTime;
-    //             float t = Mathf.Clamp01(elapsed / initialDuration);
-    //             var result = Vector3.Lerp(endScale, currentScale, t);
-    //             transform.localScale = result;
-    //             yield return null;
-    //         }
-    //     }
-    // }
 }

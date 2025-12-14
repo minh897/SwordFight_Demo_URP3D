@@ -20,16 +20,15 @@ public class SquashAndStretch : MonoBehaviour
     [SerializeField] private bool canBeOverwritten;
     [SerializeField] private bool playOnStart;
     [SerializeField] private bool playsEveryTime = true;
-    [SerializeField, Range(0,100f)] private float chanceToPlay = 100f;
+    // [SerializeField, Range(0, 100f)] private float chanceToPlay = 100f;
     
     [Header("Animation Settings")] 
     [SerializeField] private float initialScale = 1f;
     [SerializeField] private float maximumScale = 1.3f;
     [SerializeField] private bool resetToInitialScaleAfterAnimation = true;
     [SerializeField] private bool reverseAnimationCurveAfterPlaying;
-    private bool _isReversed;
 
-    [SerializeField] private AnimationCurve squashAndStretchCurve = new AnimationCurve(
+    [SerializeField] private AnimationCurve squashAndStretchCurve = new(
         new Keyframe(0f, 0f),
         new Keyframe(0.25f, 1f),
         new Keyframe(1f, 0f)
@@ -43,6 +42,8 @@ public class SquashAndStretch : MonoBehaviour
     private Vector3 _initialScaleVector;
     // private WaitForSeconds _loopingDelayWaitForSeconds;
 
+    private bool _isReversed;
+    
     private bool AffectX => (axisToAffect & SquashStretchAxis.X) != 0;
     private bool AffectY => (axisToAffect & SquashStretchAxis.Y) != 0;
     private bool AffectZ => (axisToAffect & SquashStretchAxis.Z) != 0;
@@ -65,7 +66,7 @@ public class SquashAndStretch : MonoBehaviour
     
     private void OnEnable()
     {
-        SquashAndStretchAllObjectsLikeThisEvent += PlaySquashAndStretch;
+        SquashAndStretchAllObjectsLikeThisEvent += Play;
     }
 
     private void OnDisable()
@@ -73,7 +74,7 @@ public class SquashAndStretch : MonoBehaviour
         if (_squashAndStretchCoroutine != null)
             StopCoroutine(_squashAndStretchCoroutine);
 
-        SquashAndStretchAllObjectsLikeThisEvent -= PlaySquashAndStretch;
+        SquashAndStretchAllObjectsLikeThisEvent -= Play;
     }
 
     private void Start()
@@ -82,10 +83,13 @@ public class SquashAndStretch : MonoBehaviour
             CheckForAndStartCoroutine();
     }
 
-    public void PlaySquashAndStretch()
+    public void Play()
     {
         // if (looping && !canBeOverwritten) 
         //     return;
+
+        if (!canBeOverwritten)
+            return;
 
         CheckForAndStartCoroutine();
     }
@@ -98,13 +102,16 @@ public class SquashAndStretch : MonoBehaviour
             return;
         }
 
-        if (_squashAndStretchCoroutine != null)
-        {
-            StopCoroutine(_squashAndStretchCoroutine);
-            if (playsEveryTime && resetToInitialScaleAfterAnimation)
-                transformToAffect.localScale = _initialScaleVector;
-        }
+        if (playsEveryTime && resetToInitialScaleAfterAnimation)
+            transformToAffect.localScale = _initialScaleVector;
 
+        // if (_squashAndStretchCoroutine != null)
+        // {
+        //     StopCoroutine(_squashAndStretchCoroutine);
+        //     if (playsEveryTime && resetToInitialScaleAfterAnimation)
+        //         transformToAffect.localScale = _initialScaleVector;
+        // }
+        
         _squashAndStretchCoroutine = StartCoroutine(SquashAndStretchEffect());
     }
 
