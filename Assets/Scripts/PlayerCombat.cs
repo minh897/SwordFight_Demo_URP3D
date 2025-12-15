@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using CameraShake;
 
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour

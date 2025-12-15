@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(SquashAndStretch))]
 public class EnemyHitDetection : MonoBehaviour
 {
     [SerializeField] private float stunDuration;
