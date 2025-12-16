@@ -35,6 +35,9 @@ public class PlayerCombat : MonoBehaviour
     private float currentZScale;
     private float targetZScale;
 
+    private int lastSwingDirection = 1; // 1 = right, -1 = left
+    private int currentSwingDirection;
+
     void Start()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -46,6 +49,7 @@ public class PlayerCombat : MonoBehaviour
         targetYAngle = currentYAngle + swingAngle.z;
         currentZScale = mainWeapon.transform.localScale.z;
         targetZScale = currentZScale + stretchScale.z;
+        currentSwingDirection = lastSwingDirection;
     }
 
     void Update()
@@ -60,7 +64,9 @@ public class PlayerCombat : MonoBehaviour
             nextTimeAttack = attackCooldown + Time.time;
 
             Debug.Log("Player attack");
+            vfxSwordSlash.Play();
             PlayAttackAnimation(swingDuration, lungeDuration);
+            PlaySwordSlashEffect();
         }
     }
 
@@ -76,12 +82,30 @@ public class PlayerCombat : MonoBehaviour
         attackAnimationCo = StartCoroutine(AttackAnimationRoutine(swingDuration, lungeDuration));
     }
 
+    private void PlaySwordSlashEffect()
+    {
+        // if swing angle has changed
+        if (currentSwingDirection != lastSwingDirection)
+        {
+            // flip the swordslash direction arcodingly
+            FlipSwordSlash(currentSwingDirection);
+            lastSwingDirection = currentSwingDirection;
+        }
+
+        vfxSwordSlash.Play();
+    }
+
+    private void FlipSwordSlash(int direction)
+    {
+        vfxSwordSlash.transform.localRotation =
+            direction == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
+    }
+
     private IEnumerator AttackAnimationRoutine(float swingDuration, float lungeDuration)
     {
         isAttacking = true;
         // enable weapon collider in order to "hit" enemies
         weaponCollider.enabled = true;
-        // vfxSwordSlash.gameObject.SetActive(true);
         
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
@@ -91,7 +115,10 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
         // disable weapon collider to prevent "out-of-swing" colliding
         weaponCollider.enabled = false;
-        // vfxSwordSlash.gameObject.SetActive(false);
+        // flip swing direction
+        currentSwingDirection *= -1;
+        // change overshoot angle after each swing
+        overshootYAngle *= -1;
     }
 
     private IEnumerator WeaponSwingRoutine(float duration)
@@ -137,8 +164,6 @@ public class PlayerCombat : MonoBehaviour
         // swap angle for next swing
         currentYAngle = endYAngle;
         targetYAngle = startYAngle;
-        // change direction after each swing
-        overshootYAngle *= -1;
     }
 
     private IEnumerator LungeForwardRoutine(float duration)
