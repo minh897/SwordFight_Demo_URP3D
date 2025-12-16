@@ -16,6 +16,9 @@ public class EnemyFollow : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         hitDetection = GetComponent<EnemyHitDetection>();
+
+        if (followTarget == null)
+            followTarget = FindFirstObjectByType<PlayerInputHandler>().gameObject.transform;
     }
 
     void Update()
