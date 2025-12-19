@@ -8,6 +8,7 @@ public class PlayerCombat : MonoBehaviour
     // references
     [SerializeField] private GameObject mainWeapon;
     [SerializeField] private ParticleSystem vfxSwordSlash;
+    [SerializeField] private AudioClip sfxSwordSwing;
 
     // weapon settings
     [SerializeField] private int weaponDamage = 10;
@@ -64,7 +65,7 @@ public class PlayerCombat : MonoBehaviour
             nextTimeAttack = attackCooldown + Time.time;
 
             Debug.Log("Player attack");
-            vfxSwordSlash.Play();
+            PlaySFXSwordSwing();
             PlayAttackAnimation(swingDuration, lungeDuration);
             PlaySwordSlashEffect();
         }
@@ -73,6 +74,11 @@ public class PlayerCombat : MonoBehaviour
     public bool IsAttacking() => isAttacking;
 
     public int GetWeaponDamage() => weaponDamage;
+
+    private void PlaySFXSwordSwing()
+    {
+        SoundFXManager.instance.PlaySoundFXClip(sfxSwordSwing, transform, 1f);
+    }
 
     private void PlayAttackAnimation(float swingDuration, float lungeDuration)
     {

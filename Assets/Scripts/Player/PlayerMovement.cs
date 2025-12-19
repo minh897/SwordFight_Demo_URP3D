@@ -50,17 +50,4 @@ public class PlayerMovement : MonoBehaviour
         Quaternion newRotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         rb.MoveRotation(newRotation);
     }
-
-    void OnDrawGizmos()
-    {
-        // stop drawing Gizmos outside of in Play Mode
-        if (!Application.isPlaying) return;
-
-        // draw the arrow point to the direction of input not the velocity
-        float arrowLength = 1.0F;
-        transform.GetPositionAndRotation(out var position, out var rotation);
-
-        Handles.color = Color.red;
-        Handles.ArrowHandleCap(0, position, rotation, arrowLength, EventType.Repaint);
-    }
 }

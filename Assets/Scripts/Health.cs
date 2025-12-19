@@ -33,7 +33,7 @@ public class Health : MonoBehaviour, IDamageable
     {
         currentHealth -= damage;
         healthSlider.value = currentHealth;
-        
+
         if (currentHealth <= 0)
         {
             Die();

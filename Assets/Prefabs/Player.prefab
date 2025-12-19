@@ -915,11 +915,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: looping
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: lengthInSec
-      value: 0.05
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: playOnAwake
@@ -927,7 +927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: simulationSpeed
-      value: 100
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: SubModule.enabled
@@ -947,7 +947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: InitialModule.maxNumParticles
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: SubModule.subEmitters.Array.size
