@@ -5,21 +5,27 @@ using CameraShake;
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
-    // references
+    [Header("References")]
     [SerializeField] private GameObject mainWeapon;
     [SerializeField] private ParticleSystem vfxSwordSlash;
     [SerializeField] private AudioClip sfxSwordSwing;
 
-    // weapon settings
+    [Header("Weapon Stats")]
     [SerializeField] private int weaponDamage = 10;
     [SerializeField] private float attackCooldown = 0.5f;
-    // [SerializeField] private float attackDuration = 0.3f;
+
+    [Header("Weapon Animation")]
     [SerializeField] private float swingDuration = 0.3f;
     [SerializeField] private float overshootYAngle = -30f;
     [SerializeField] private Vector3 swingAngle;
     [SerializeField] private float lungeDuration = 0.2f;
     [SerializeField] private float lungeDistance = 1f;
     [SerializeField] private Vector3 stretchScale;
+
+    [Header("Sound Setting")]
+    [SerializeField] private float minPitch;
+    [SerializeField] private float maxPitch;
+    [SerializeField, Range(0, 1)] private float volume;
 
     private PlayerInputHandler inputHandler;
     private BoxCollider weaponCollider;
@@ -77,7 +83,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void PlaySFXSwordSwing()
     {
-        SoundFXManager.instance.PlaySoundFXClip(sfxSwordSwing, transform, 1f);
+        SoundFXManager.instance.PlaySoundFXClip(sfxSwordSwing, transform, volume, minPitch, maxPitch);
     }
 
     private void PlayAttackAnimation(float swingDuration, float lungeDuration)

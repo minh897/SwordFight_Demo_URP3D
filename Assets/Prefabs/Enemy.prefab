@@ -258,11 +258,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitDetection
+  sfxImpact: {fileID: 8300000, guid: fe7b6c616b52d3c7d9b484fc95ef8df4, type: 3}
   stunDuration: 0.6
   pushDuration: 0.1
   leanDuration: 0.2
   pushBackDistance: 0
   leanAngle: {x: -45, y: 0, z: 0}
+  minPitch: 1
+  maxPitch: 1.2
+  volume: 0.415
 --- !u!114 &8809752827283777462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +286,7 @@ MonoBehaviour:
   playOnStart: 0
   playsEveryTime: 1
   initialScale: 1
-  maximumScale: 1.2
+  maximumScale: 1.5
   resetToInitialScaleAfterAnimation: 1
   reverseAnimationCurveAfterPlaying: 0
   squashAndStretchCurve:

@@ -12,7 +12,7 @@ public class SoundFXManager : MonoBehaviour
             instance = this;
     }
 
-    public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume)
+    public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume, float minPitch, float maxPitch)
     {
         // spawn in gameObject with audio source
         AudioSource audioSource = Instantiate(soundFXObject, spawnTransform.position, Quaternion.identity);
@@ -20,6 +20,8 @@ public class SoundFXManager : MonoBehaviour
         audioSource.clip = audioClip;
         // assign volume
         audioSource.volume = volume;
+        // randomize pitch
+        audioSource.pitch = Random.Range(minPitch, maxPitch);
         // play sound
         audioSource.Play();
         // get length of sound FX clip

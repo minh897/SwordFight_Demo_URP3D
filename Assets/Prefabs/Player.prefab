@@ -187,14 +187,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   bounceShakeParams:
-    positionStrength: 0.02
-    rotationStrength: 0.05
+    positionStrength: 0.05
+    rotationStrength: 0.1
     axesMultiplier:
       position: {x: 1, y: 1, z: 0}
       eulerAngles: {x: 0, y: 0, z: 1}
-    freq: 100
+    freq: 25
     numBounces: 3
-    randomness: 0
+    randomness: 0.512
     attenuation:
       clippingDistance: 10
       falloffScale: 50
@@ -701,6 +701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
   mainWeapon: {fileID: 3049018307011782718}
   vfxSwordSlash: {fileID: 991059352814421316}
+  sfxSwordSwing: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
   weaponDamage: 10
   attackCooldown: 0.3
   swingDuration: 0.2
@@ -709,6 +710,9 @@ MonoBehaviour:
   lungeDuration: 0.2
   lungeDistance: 0
   stretchScale: {x: 0, y: 0, z: 1}
+  minPitch: 0.85
+  maxPitch: 1
+  volume: 0.553
 --- !u!114 &3875284894650491411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,6 +825,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6400882307353775446}
     m_Modifications:
+    - target: {fileID: 48369158107856676, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 427659019463670394, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: looping
       value: 0
@@ -915,7 +923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: lengthInSec
@@ -951,7 +959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: SubModule.subEmitters.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.size
@@ -973,10 +981,6 @@ PrefabInstance:
       propertyPath: SubModule.subEmitters.Array.data[2].emitter
       value: 
       objectReference: {fileID: 3852036937942186477}
-    - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
-      propertyPath: SubModule.subEmitters.Array.data[3].emitter
-      value: 
-      objectReference: {fileID: 3260722518569604648}
     - target: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
       propertyPath: SubModule.subEmitters.Array.data[0].properties
       value: 16
@@ -1186,18 +1190,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 48369158107856676, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
 --- !u!198 &991059352814421316 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4610961239455701704, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
-  m_PrefabInstance: {fileID: 3620225503871311756}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &3260722518569604648 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 2269240477502556580, guid: 26d24b51c44199116be0f1c97682e57b, type: 3}
   m_PrefabInstance: {fileID: 3620225503871311756}
   m_PrefabAsset: {fileID: 0}
 --- !u!198 &3852036937942186477 stripped

@@ -180,7 +180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &464649327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464649326}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c53019692a6061e8faf32f31dc3886bb, type: 3}
   m_Name: 
@@ -781,10 +781,6 @@ PrefabInstance:
       propertyPath: followTarget
       value: 
       objectReference: {fileID: 3192979842962941034}
-    - target: {fileID: 7294141662143326190, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
-      propertyPath: damageSoundFX
-      value: 
-      objectReference: {fileID: 8300000, guid: fe7b6c616b52d3c7d9b484fc95ef8df4, type: 3}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5
@@ -876,15 +872,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1208336874905044535, guid: 115957c56ed2b4a1e8ce853cd3b2fcad, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.00025
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1208336874905044535, guid: 115957c56ed2b4a1e8ce853cd3b2fcad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1391
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1208336874905044535, guid: 115957c56ed2b4a1e8ce853cd3b2fcad, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.34605
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1208336874905044535, guid: 115957c56ed2b4a1e8ce853cd3b2fcad, type: 3}
       propertyPath: m_LocalRotation.w
@@ -931,22 +927,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 327944960558083051, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-      propertyPath: sfxSwordSwing
-      value: 
-      objectReference: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
-    - target: {fileID: 991059352814421316, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-      propertyPath: looping
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4944354138407214497, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5129457906777956133, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
-      propertyPath: hitSoundFX
-      value: 
-      objectReference: {fileID: 8300000, guid: fe7b6c616b52d3c7d9b484fc95ef8df4, type: 3}
     - target: {fileID: 6400882307353775446, guid: 49c6dae42d65367aeaf8b60cd46671a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -5,11 +5,19 @@ using UnityEngine;
 [RequireComponent(typeof(SquashAndStretch))]
 public class EnemyHitDetection : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private AudioClip sfxImpact;
+
     [SerializeField] private float stunDuration;
     [SerializeField] private float pushDuration;
     [SerializeField] private float leanDuration;
     [SerializeField] private float pushBackDistance;
     [SerializeField] private Vector3 leanAngle;
+
+    [Header("Sound Setting")]
+    [SerializeField] private float minPitch;
+    [SerializeField] private float maxPitch;
+    [SerializeField, Range(0, 1)] private float volume;
 
     private Health myWellBeing;
     private SquashAndStretch anim_SquashAndStretch;
@@ -35,6 +43,7 @@ public class EnemyHitDetection : MonoBehaviour
         if (other.CompareTag("Weapon"))
         {
             PlayGetHit();
+            PlaySFXImpact();
             // get weapon damage from PlayerCombat
             int damage = other.gameObject.
                 GetComponentInParent<PlayerCombat>().
@@ -45,6 +54,11 @@ public class EnemyHitDetection : MonoBehaviour
     }
 
     public bool IsStunned() => isStunned;
+
+    private void PlaySFXImpact()
+    {
+        SoundFXManager.instance.PlaySoundFXClip(sfxImpact, transform, volume, minPitch, maxPitch);
+    }
 
     private void PlayGetHit()
     {
