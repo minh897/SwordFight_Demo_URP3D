@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 923146754158121859}
   - component: {fileID: 6742428916845895860}
-  - component: {fileID: 5129457906777956133}
+  - component: {fileID: 1268149875325917009}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Weapon
@@ -174,7 +174,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5129457906777956133
+--- !u!114 &1268149875325917009
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,18 +183,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 3049018307011782718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9614973dd3fff99749853842188d28fb, type: 3}
+  m_Script: {fileID: 11500000, guid: bb132499728fb2eefab499e5af136626, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::SwordHitBox
+  hitVFX: {fileID: 3704751778472452749, guid: 5e519e687cf9130359e331ce487667f8, type: 3}
   bounceShakeParams:
     positionStrength: 0.05
     rotationStrength: 0.1
     axesMultiplier:
       position: {x: 1, y: 1, z: 0}
       eulerAngles: {x: 0, y: 0, z: 1}
-    freq: 25
+    freq: 50
     numBounces: 3
-    randomness: 0.512
+    randomness: 0.5
     attenuation:
       clippingDistance: 10
       falloffScale: 50

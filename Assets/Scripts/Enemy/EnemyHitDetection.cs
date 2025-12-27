@@ -19,14 +19,14 @@ public class EnemyHitDetection : MonoBehaviour
     [SerializeField] private float maxPitch;
     [SerializeField, Range(0, 1)] private float volume;
 
+    // components
     private Health myWellBeing;
     private SquashAndStretch anim_SquashAndStretch;
 
     private bool isStunned = false;
-    private Coroutine getHitRoutine;
-
     private float currentAngleX;
     private float targetAngleX;
+    private Coroutine getHitRoutine;
 
     void Start()
     {
