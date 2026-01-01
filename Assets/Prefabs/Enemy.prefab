@@ -161,9 +161,10 @@ GameObject:
   - component: {fileID: 7847448758086520596}
   - component: {fileID: 4325979857711780762}
   - component: {fileID: 7294141662143326190}
+  - component: {fileID: 8809752827283777462}
   - component: {fileID: 6737465868347739629}
   - component: {fileID: 1526531444067943883}
-  - component: {fileID: 8809752827283777462}
+  - component: {fileID: 4398909512442246609}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -231,42 +232,6 @@ MonoBehaviour:
   uiHealthBar: {fileID: 6613363122580161008}
   maxHealth: 1000
   currentHealth: 0
---- !u!114 &6737465868347739629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ef40c9dbf10fb9abdb0d7078f1e380, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  followTarget: {fileID: 0}
-  followSpeed: 0
-  rotateSpeed: 5
---- !u!114 &1526531444067943883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HitDetection
-  sfxImpact: {fileID: 8300000, guid: fe7b6c616b52d3c7d9b484fc95ef8df4, type: 3}
-  stunDuration: 0.6
-  pushDuration: 0.1
-  leanDuration: 0.2
-  pushBackDistance: 0
-  leanAngle: {x: -45, y: 0, z: 0}
-  minPitch: 1
-  maxPitch: 1.2
-  volume: 0.415
 --- !u!114 &8809752827283777462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +287,57 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6737465868347739629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ef40c9dbf10fb9abdb0d7078f1e380, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  followTarget: {fileID: 0}
+  followSpeed: 0
+  rotateSpeed: 5
+--- !u!114 &1526531444067943883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitDetection
+  sfxImpact: {fileID: 8300000, guid: fe7b6c616b52d3c7d9b484fc95ef8df4, type: 3}
+  stunDuration: 0.6
+  pushDuration: 0.1
+  leanDuration: 0.2
+  pushBackDistance: 0
+  leanAngle: {x: -45, y: 0, z: 0}
+  minPitch: 1
+  maxPitch: 1.2
+  volume: 0.415
+--- !u!114 &4398909512442246609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5800e3afe087784b485d098ab16a23ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHitFlash
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  flashIntensity: 2
+  fadeDuration: 0.2
 --- !u!1 &5108124120958531200
 GameObject:
   m_ObjectHideFlags: 0

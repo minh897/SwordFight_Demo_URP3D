@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour, IDamageable
 {
+    public bool IsDead { get; private set; }
+
     [SerializeField] private GameObject uiHealthBar;
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
@@ -31,22 +33,19 @@ public class Health : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
+        if (IsDead) 
+            return;
+            
         currentHealth -= damage;
         healthSlider.value = currentHealth;
-
-        if (currentHealth <= 0)
-        {
-            Die();
-            // check for win or lose condition whenever player or an enemy die
-            gameManager.CheckWinLoseCondition(gameObject);
-        }
-
-        Debug.Log(transform.gameObject + " health reduced by " + currentHealth);
+        HandleDeath();
     }
 
-    private void Die()
+    public void HandleDeath()
     {
-        Debug.Log(transform.gameObject + " has died");
-        transform.gameObject.SetActive(false);
+        if (currentHealth > 0)
+            return;
+        
+        IsDead = true;
     }
 }

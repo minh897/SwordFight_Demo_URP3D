@@ -1,9 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Health))]
-[RequireComponent(typeof(SquashAndStretch))]
-[RequireComponent(typeof(EnemyHitFlash))]
 public class EnemyHitDetection : MonoBehaviour
 {
     [Header("References")]
@@ -23,8 +20,9 @@ public class EnemyHitDetection : MonoBehaviour
     // components
     private Health myWellBeing;
     private SquashAndStretch anim_SquashAndStretch;
-    private EnemyHitFlash hitFlash;
+    private EnemyDamageFlash flashController;
 
+    // private fields
     private bool isStunned = false;
     private float currentAngleX;
     private float targetAngleX;
@@ -34,7 +32,7 @@ public class EnemyHitDetection : MonoBehaviour
     {
         myWellBeing = GetComponent<Health>();
         anim_SquashAndStretch = GetComponent<SquashAndStretch>();
-        hitFlash = GetComponent<EnemyHitFlash>();
+        flashController = GetComponent<EnemyDamageFlash>();
 
         currentAngleX = transform.localRotation.x;
         targetAngleX = currentAngleX + leanAngle.x;
@@ -56,9 +54,10 @@ public class EnemyHitDetection : MonoBehaviour
 
     private void PlayHitFlash()
     {
-        hitFlash.PlayHitFlash();
+        flashController.FlashColor();
     }
 
+    // REFACTOR
     private void TakeDamageFrom(Collider other)
     {
         // get weapon damage from PlayerCombat
@@ -66,7 +65,7 @@ public class EnemyHitDetection : MonoBehaviour
             GetComponentInParent<PlayerCombat>().
             GetWeaponDamage();
         // receive damage through IDamageable
-        myWellBeing.TakeDamage(damage);
+        // myWellBeing.TakeDamage(damage);
     }
 
     private void PlaySFXImpact()

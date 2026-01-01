@@ -1,10 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHitFlash : MonoBehaviour
+public class EnemyDamageFlash : MonoBehaviour
 {
-    private const string EMISSIONCOLOR = "_EmissionColor";
-    private static readonly int EmissionColor = Shader.PropertyToID(EMISSIONCOLOR);
+    public IReadOnlyList<Renderer> Renderers => renderers;
 
     [Header("Flash Settings")]
     [SerializeField] private Color hitColor = Color.red;
@@ -13,10 +13,14 @@ public class EnemyHitFlash : MonoBehaviour
     
     // components
     private Renderer[] renderers;
-    private MaterialPropertyBlock mpb;
 
+    // data
+    private MaterialPropertyBlock mpb;
     private Color originalEmission;
     private Coroutine flashCo;
+
+    private const string EMISSIONCOLOR = "_EmissionColor";
+    private static readonly int EmissionColor = Shader.PropertyToID(EMISSIONCOLOR);
 
     void Awake()
     {
@@ -32,7 +36,7 @@ public class EnemyHitFlash : MonoBehaviour
         }
     }
 
-    public void PlayHitFlash()
+    public void FlashColor()
     {
         // stop any running flash animation
         if (flashCo != null) StopCoroutine(flashCo);
@@ -43,25 +47,27 @@ public class EnemyHitFlash : MonoBehaviour
     private IEnumerator FlashRoutine()
     {
         // apply hit color instantly
-        SetEmissionColor(hitColor * flashIntensity);
+        Color targetEmission = hitColor * flashIntensity;
+        SetEmissionColor(targetEmission, renderers);
+
         // slowly fade back to original
         float elapsed = 0;
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / fadeDuration);
-            Color current = Color.Lerp(originalEmission, hitColor * flashIntensity, t);
+            Color current = Color.Lerp(targetEmission, originalEmission, t);
             // apply emission color to current color
-            SetEmissionColor(current);
+            SetEmissionColor(current, renderers);
             yield return null;
         }
         // make sure the original emission color is correct
-        SetEmissionColor(originalEmission);
+        SetEmissionColor(originalEmission, renderers);
     }
 
-    private void SetEmissionColor(Color color)
+    private void SetEmissionColor(Color color, Renderer[] rendererList)
     {
-        foreach (var rd in renderers)
+        foreach (var rd in rendererList)
         {
             rd.GetPropertyBlock(mpb);
             mpb.SetColor(EmissionColor, color);
