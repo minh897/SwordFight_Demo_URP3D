@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MakeTransparent : MonoBehaviour
 {
     [SerializeField] private Material transparentMat;
 
-    public void SetMatToTransparent(Renderer[] renderers)
+    public void SetMatToTransparent(IReadOnlyList<Renderer> renderers)
     {
         foreach (var rd in renderers)
         {

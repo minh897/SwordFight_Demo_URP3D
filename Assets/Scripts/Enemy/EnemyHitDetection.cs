@@ -19,8 +19,9 @@ public class EnemyHitDetection : MonoBehaviour
 
     // components
     private Health myWellBeing;
-    private SquashAndStretch anim_SquashAndStretch;
+    private SquashAndStretch stretchController;
     private EnemyDamageFlash flashController;
+    private MakeTransparent makeTransparent;
 
     // private fields
     private bool isStunned = false;
@@ -31,8 +32,9 @@ public class EnemyHitDetection : MonoBehaviour
     void Start()
     {
         myWellBeing = GetComponent<Health>();
-        anim_SquashAndStretch = GetComponent<SquashAndStretch>();
+        stretchController = GetComponent<SquashAndStretch>();
         flashController = GetComponent<EnemyDamageFlash>();
+        makeTransparent = GetComponent<MakeTransparent>();
 
         currentAngleX = transform.localRotation.x;
         targetAngleX = currentAngleX + leanAngle.x;
@@ -43,18 +45,27 @@ public class EnemyHitDetection : MonoBehaviour
         // check if the colliding object has "Weapon" tag
         if (other.CompareTag("Weapon"))
         {
-            PlayGetHit();
-            PlaySFXImpact();
-            PlayHitFlash();
+            PlayImpactSFX();
+            PlayGetHitVFX();
             TakeDamageFrom(other);
+
+            // if the enemy is dead taking damage
+            if (myWellBeing.IsDead)
+            {
+                Debug.Log("Enemy is dead");
+                // turn the enemy transparent to simulate death
+                makeTransparent.SetMatToTransparent(flashController.Renderers);
+                // disable the enemy GameObject after half a second
+                Invoke(nameof(DisableEnemyAfter), .5f);
+            }
         }
     }
 
     public bool IsStunned() => isStunned;
 
-    private void PlayHitFlash()
+    private void DisableEnemyAfter()
     {
-        flashController.FlashColor();
+        gameObject.SetActive(false);
     }
 
     // REFACTOR
@@ -65,26 +76,37 @@ public class EnemyHitDetection : MonoBehaviour
             GetComponentInParent<PlayerCombat>().
             GetWeaponDamage();
         // receive damage through IDamageable
-        // myWellBeing.TakeDamage(damage);
+        myWellBeing.TakeDamage(damage);
     }
 
-    private void PlaySFXImpact()
-    {
-        SoundFXManager.instance.PlaySoundFXClip(sfxImpact, transform, volume, minPitch, maxPitch);
-    }
-
-    private void PlayGetHit()
+    private void PlayGetHitVFX()
     {
         if (getHitRoutine != null) StopCoroutine(getHitRoutine);
         getHitRoutine = StartCoroutine(GetHitRoutine());
     }
 
+    private void PlayImpactSFX()
+    {
+        SoundFXManager.instance.PlaySoundFXClip(sfxImpact, transform, volume, minPitch, maxPitch);
+    }
+
+    private void PlayDamageFlashVFX()
+    {
+        flashController.FlashColor();
+    }
+
+    private void PlaySquashAndStretchVFX()
+    {
+        stretchController.Play();
+    }
+
     private IEnumerator GetHitRoutine()
     {
-        // start a countdown for stun durtation
         isStunned = true;
 
-        anim_SquashAndStretch.Play();
+        PlayDamageFlashVFX();
+        PlaySquashAndStretchVFX();
+
         Coroutine waitForRoutine = StartCoroutine(PushBackRoutine(pushDuration));
         StartCoroutine(LeanBackwardRoutine(leanDuration));
         yield return waitForRoutine;

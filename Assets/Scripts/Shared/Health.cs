@@ -9,13 +9,10 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
 
-    private GameManager gameManager;
     private Slider healthSlider;
 
     void Awake()
     {
-        gameManager = FindFirstObjectByType<GameManager>();
-
         if (gameObject.CompareTag("Enemy"))
             healthSlider = uiHealthBar.GetComponentInChildren<Slider>();
     }
@@ -24,6 +21,7 @@ public class Health : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
 
+        // set up enmy health bar UI
         if (gameObject.CompareTag("Enemy"))
         {
             healthSlider.maxValue = maxHealth;
@@ -33,19 +31,26 @@ public class Health : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
-        if (IsDead) 
-            return;
-            
-        currentHealth -= damage;
-        healthSlider.value = currentHealth;
+        HandleHealth(damage);
         HandleDeath();
     }
 
-    public void HandleDeath()
+    private void HandleHealth(int damage)
     {
+        currentHealth -= damage;
+
+        // update enemy health bar ui
+        if (gameObject.CompareTag("Enemy"))
+            healthSlider.value = currentHealth;
+    }
+
+    private void HandleDeath()
+    {
+        // check if current health is depleted
         if (currentHealth > 0)
             return;
         
         IsDead = true;
+        healthSlider.gameObject.SetActive(false);
     }
 }
