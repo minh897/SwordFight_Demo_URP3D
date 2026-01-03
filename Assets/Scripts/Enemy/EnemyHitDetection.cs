@@ -19,7 +19,7 @@ public class EnemyHitDetection : MonoBehaviour
 
     // components
     private Health myWellBeing;
-    private SquashAndStretch stretchController;
+    private SquashAndStretch stretchAnim;
     private EnemyDamageFlash flashController;
     private MakeTransparent makeTransparent;
 
@@ -29,13 +29,16 @@ public class EnemyHitDetection : MonoBehaviour
     private float targetAngleX;
     private Coroutine getHitRoutine;
 
-    void Start()
+    void Awake()
     {
         myWellBeing = GetComponent<Health>();
-        stretchController = GetComponent<SquashAndStretch>();
+        stretchAnim = GetComponent<SquashAndStretch>();
         flashController = GetComponent<EnemyDamageFlash>();
         makeTransparent = GetComponent<MakeTransparent>();
+    }
 
+    void Start()
+    {
         currentAngleX = transform.localRotation.x;
         targetAngleX = currentAngleX + leanAngle.x;
     }
@@ -46,7 +49,8 @@ public class EnemyHitDetection : MonoBehaviour
         if (other.CompareTag("Weapon"))
         {
             PlayImpactSFX();
-            PlayGetHitVFX();
+            PlayImpactAnim();
+            PlayDamageFlashVFX();
             TakeDamageFrom(other);
 
             // if the enemy is dead taking damage
@@ -79,7 +83,7 @@ public class EnemyHitDetection : MonoBehaviour
         myWellBeing.TakeDamage(damage);
     }
 
-    private void PlayGetHitVFX()
+    private void PlayImpactAnim()
     {
         if (getHitRoutine != null) StopCoroutine(getHitRoutine);
         getHitRoutine = StartCoroutine(GetHitRoutine());
@@ -95,18 +99,16 @@ public class EnemyHitDetection : MonoBehaviour
         flashController.FlashColor();
     }
 
-    private void PlaySquashAndStretchVFX()
+    private void PlaySquashAndStretchAnim()
     {
-        stretchController.Play();
+        stretchAnim.Play();
     }
 
     private IEnumerator GetHitRoutine()
     {
         isStunned = true;
 
-        PlayDamageFlashVFX();
-        PlaySquashAndStretchVFX();
-
+        PlaySquashAndStretchAnim();
         Coroutine waitForRoutine = StartCoroutine(PushBackRoutine(pushDuration));
         StartCoroutine(LeanBackwardRoutine(leanDuration));
         yield return waitForRoutine;

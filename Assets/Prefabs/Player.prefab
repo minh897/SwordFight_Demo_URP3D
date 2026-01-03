@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2006509750603624563}
   - component: {fileID: 6910058415536691690}
   - component: {fileID: 5524668882015794525}
-  - component: {fileID: 3641636708237980408}
   m_Layer: 0
   m_Name: Blade
   m_TagString: Weapon
@@ -90,27 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3641636708237980408
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1062081298266367311}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1.5, y: 3.5, z: 1.3}
-  m_Center: {x: 0, y: 0, z: 0.16}
 --- !u!1 &3049018307011782718
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 923146754158121859}
   - component: {fileID: 6742428916845895860}
-  - component: {fileID: 1268149875325917009}
+  - component: {fileID: 9024341072632843631}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Weapon
@@ -174,33 +152,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1268149875325917009
-MonoBehaviour:
+--- !u!65 &9024341072632843631
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3049018307011782718}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb132499728fb2eefab499e5af136626, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SwordHitBox
-  hitVFX: {fileID: 3704751778472452749, guid: 5e519e687cf9130359e331ce487667f8, type: 3}
-  bounceShakeParams:
-    positionStrength: 0.05
-    rotationStrength: 0.1
-    axesMultiplier:
-      position: {x: 1, y: 1, z: 0}
-      eulerAngles: {x: 0, y: 0, z: 1}
-    freq: 50
-    numBounces: 3
-    randomness: 0.5
-    attenuation:
-      clippingDistance: 10
-      falloffScale: 50
-      falloffDegree: 1
-      axesMultiplier: {x: 1, y: 1, z: 1}
+  serializedVersion: 3
+  m_Size: {x: 2.1, y: 0.1, z: 0.6}
+  m_Center: {x: 2, y: 0, z: 0}
 --- !u!1 &3116226592419006964
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +239,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 29d96d8913a94a575865fe665301c2e8, type: 2}
+  - {fileID: 2100000, guid: 5a10aec0ba70b1db89ecb1d2171e167c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -700,10 +672,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e1ffd85a9cac491a6866139f0fb219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  mainWeapon: {fileID: 3049018307011782718}
-  vfxSwordSlash: {fileID: 991059352814421316}
-  sfxSwordSwing: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
-  weaponDamage: 10
+  swordCollider: {fileID: 9024341072632843631}
+  swordDamage: 10
   attackCooldown: 0.3
   swingDuration: 0.2
   overshootYAngle: -30
@@ -711,6 +681,8 @@ MonoBehaviour:
   lungeDuration: 0.2
   lungeDistance: 0
   stretchScale: {x: 0, y: 0, z: 1}
+  vfxSwordSlash: {fileID: 991059352814421316}
+  sfxSwordSwing: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
   minPitch: 0.85
   maxPitch: 1
   volume: 0.553
@@ -795,7 +767,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ea44aa821b557b5e7b981b55d1fe6f19, type: 2}
+  - {fileID: 2100000, guid: da032ef72f8779f53b7253d4c8ba218a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

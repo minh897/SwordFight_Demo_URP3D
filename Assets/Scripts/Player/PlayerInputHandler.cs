@@ -8,7 +8,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     public bool AttackInput { get; private set; }
 
     private PlayerInput playerInput;
-    private PlayerMovement _movement;
     private PlayerCombat _combat;
 
     private InputAction moveAction;
@@ -16,7 +15,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        _movement = GetComponent<PlayerMovement>();
         _combat = GetComponent<PlayerCombat>();
     }
 

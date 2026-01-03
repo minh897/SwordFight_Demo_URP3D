@@ -1,20 +1,15 @@
 using System.Collections;
 using UnityEngine;
-using CameraShake;
 
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private GameObject mainWeapon;
-    [SerializeField] private ParticleSystem vfxSwordSlash;
-    [SerializeField] private AudioClip sfxSwordSwing;
+    [Header("Weapon")]
+    [SerializeField] private BoxCollider swordCollider;
+    [SerializeField] private int swordDamage = 10;
 
-    [Header("Weapon Stats")]
-    [SerializeField] private int weaponDamage = 10;
+    [Header("Animation")]
     [SerializeField] private float attackCooldown = 0.5f;
-
-    [Header("Weapon Animation")]
     [SerializeField] private float swingDuration = 0.3f;
     [SerializeField] private float overshootYAngle = -30f;
     [SerializeField] private Vector3 swingAngle;
@@ -22,39 +17,44 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float lungeDistance = 1f;
     [SerializeField] private Vector3 stretchScale;
 
-    [Header("Sound Setting")]
+    [Header("Particle System")]
+    [SerializeField] private ParticleSystem vfxSwordSlash;
+    [SerializeField] private ParticleSystem vfxSwordHit;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip sfxSwordSwing;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
     [SerializeField, Range(0, 1)] private float volume;
 
     private PlayerInputHandler inputHandler;
-    private BoxCollider weaponCollider;
     private Coroutine attackAnimationCo;
 
+    // input state
     private bool isAttacking = false;
 
     // attack timers
     private float attackTimer = 0f;
     private float nextTimeAttack = 0f;
 
+    // animation data
     private float currentYAngle;
     private float targetYAngle;
     private float currentZScale;
     private float targetZScale;
-
     private int lastSwingDirection = 1; // 1 = right, -1 = left
     private int currentSwingDirection;
 
-    void Start()
+    void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
-        weaponCollider = mainWeapon.GetComponentInChildren<BoxCollider>();
+    }
 
-        weaponCollider.enabled = false;
-        
-        currentYAngle = mainWeapon.transform.localEulerAngles.y;
+    void Start()
+    {
+        currentYAngle = swordCollider.transform.localEulerAngles.y;
         targetYAngle = currentYAngle + swingAngle.z;
-        currentZScale = mainWeapon.transform.localScale.z;
+        currentZScale = swordCollider.transform.localScale.z;
         targetZScale = currentZScale + stretchScale.z;
         currentSwingDirection = lastSwingDirection;
     }
@@ -70,32 +70,24 @@ public class PlayerCombat : MonoBehaviour
         {
             nextTimeAttack = attackCooldown + Time.time;
 
-            Debug.Log("Player attack");
-            PlaySFXSwordSwing();
-            PlayAttackAnimation(swingDuration, lungeDuration);
-            PlaySwordSlashEffect();
+            PlayAttackAnimation();
+            PlaySwordSwingSFX();
+            PlaySwordSlashVFX();
         }
     }
 
     public bool IsAttacking() => isAttacking;
 
-    public int GetWeaponDamage() => weaponDamage;
+    public int GetWeaponDamage() => swordDamage;
 
-    private void PlaySFXSwordSwing()
+    private void PlaySwordSwingSFX()
     {
         SoundFXManager.instance.PlaySoundFXClip(sfxSwordSwing, transform, volume, minPitch, maxPitch);
     }
 
-    private void PlayAttackAnimation(float swingDuration, float lungeDuration)
+    private void PlaySwordSlashVFX()
     {
-        // make sure only one coroutine is running
-        // prevent one coroutine running multiple times
-        if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
-        attackAnimationCo = StartCoroutine(AttackAnimationRoutine(swingDuration, lungeDuration));
-    }
-
-    private void PlaySwordSlashEffect()
-    {
+        vfxSwordSlash.Play(); 
         // if swing angle has changed
         if (currentSwingDirection != lastSwingDirection)
         {
@@ -103,8 +95,6 @@ public class PlayerCombat : MonoBehaviour
             FlipSwordSlash(currentSwingDirection);
             lastSwingDirection = currentSwingDirection;
         }
-
-        vfxSwordSlash.Play();
     }
 
     private void FlipSwordSlash(int direction)
@@ -113,11 +103,17 @@ public class PlayerCombat : MonoBehaviour
             direction == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
     }
 
-    private IEnumerator AttackAnimationRoutine(float swingDuration, float lungeDuration)
+    private void PlayAttackAnimation()
+    {
+        // make sure only one coroutine is running
+        // prevent one coroutine running multiple times
+        if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
+        attackAnimationCo = StartCoroutine(AttackAnimationRoutine());
+    }
+
+    private IEnumerator AttackAnimationRoutine()
     {
         isAttacking = true;
-        // enable weapon collider in order to "hit" enemies
-        weaponCollider.enabled = true;
         
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
@@ -125,8 +121,6 @@ public class PlayerCombat : MonoBehaviour
         yield return swingCo;
 
         isAttacking = false;
-        // disable weapon collider to prevent "out-of-swing" colliding
-        weaponCollider.enabled = false;
         // flip swing direction
         currentSwingDirection *= -1;
         // change overshoot angle after each swing
@@ -155,7 +149,7 @@ public class PlayerCombat : MonoBehaviour
             // (prevent it to hit 0.2 or 1.1 something like that)
             float t = Mathf.Clamp01(elapsed / halfDuration);
             float yRot = Mathf.Lerp(startYAngle, offsetYAngle, t);
-            mainWeapon.transform.localRotation = Quaternion.Euler(0, yRot, 0);
+            swordCollider.transform.localRotation = Quaternion.Euler(0, yRot, 0);
             yield return null;
         }
 
@@ -167,12 +161,12 @@ public class PlayerCombat : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / returnDuration);
             // Ease back from overshoot to final resting angle
             float yRot = Mathf.Lerp(offsetYAngle, endYAngle, t);
-            mainWeapon.transform.localRotation = Quaternion.Euler(0, yRot, 0);
+            swordCollider.transform.localRotation = Quaternion.Euler(0, yRot, 0);
             yield return null;
         }
 
         // make sure the rotation hit the target
-        mainWeapon.transform.localRotation = Quaternion.Euler(0, endYAngle, 0);
+        swordCollider.transform.localRotation = Quaternion.Euler(0, endYAngle, 0);
         // swap angle for next swing
         currentYAngle = endYAngle;
         targetYAngle = startYAngle;
@@ -212,11 +206,11 @@ public class PlayerCombat : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / halfDuration);
             float zScale = Mathf.Lerp(startZScale, endZScale, t);
-            mainWeapon.transform.localScale = new(1, 1, zScale);
+            swordCollider.transform.localScale = new(1, 1, zScale);
             yield return null;
         }
 
-        mainWeapon.transform.localScale = targetScale;
+        swordCollider.transform.localScale = targetScale;
         float newStartZScale = endZScale;
         float newTargetZScale = startZScale;
         
@@ -226,7 +220,7 @@ public class PlayerCombat : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / returnDuration);
             float zScale = Mathf.Lerp(newStartZScale, newTargetZScale, t);
-            mainWeapon.transform.localScale = new(1, 1, zScale);
+            swordCollider.transform.localScale = new(1, 1, zScale);
             yield return null;
         }
     }

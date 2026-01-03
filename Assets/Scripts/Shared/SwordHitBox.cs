@@ -15,6 +15,13 @@ public class SwordHitBox : MonoBehaviour
         }
     }
 
+#region Refactor
+/// <summary>
+/// 
+/// Instantiate vfx every swing is costly 
+/// and impacts performance
+/// 
+/// </summary>
     private void SpawnHitVFX(Collider other)
     {
         // Get closest impact point
@@ -25,4 +32,5 @@ public class SwordHitBox : MonoBehaviour
         // Create vfx at hit position
         Instantiate(hitVFX, hitPoint, rotation, other.transform.parent);
     }
+#endregion
 }
