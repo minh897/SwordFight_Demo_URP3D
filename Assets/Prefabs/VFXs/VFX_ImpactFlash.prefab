@@ -4887,7 +4887,7 @@ Light:
   m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: NaN, y: NaN, z: 3.3925e-41, w: NaN}
+  m_BoundingSphereOverride: {x: 6.516e-42, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
@@ -23982,8 +23982,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7815485160081766550}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.4353008, y: 0.56363916, z: 0.518881, w: -0.4728494}
+  m_LocalPosition: {x: -0.077494055, y: 0.95, z: 2.986319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -24083,7 +24083,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7815485160081766550}
   serializedVersion: 8
-  lengthInSec: 0.5
+  lengthInSec: 0.1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -27770,12 +27770,32 @@ ParticleSystem:
     - {fileID: 0}
   SubModule:
     serializedVersion: 2
-    enabled: 0
+    enabled: 1
     subEmitters:
     - serializedVersion: 3
-      emitter: {fileID: 0}
+      emitter: {fileID: 3370661820538574130}
       type: 0
-      properties: 0
+      properties: 16
+      emitProbability: 1
+    - serializedVersion: 3
+      emitter: {fileID: 7992361673635608494}
+      type: 0
+      properties: 16
+      emitProbability: 1
+    - serializedVersion: 3
+      emitter: {fileID: 1595265531179917103}
+      type: 0
+      properties: 16
+      emitProbability: 1
+    - serializedVersion: 3
+      emitter: {fileID: 6468114531041968192}
+      type: 0
+      properties: 16
+      emitProbability: 1
+    - serializedVersion: 3
+      emitter: {fileID: 3538284452991579969}
+      type: 0
+      properties: 16
       emitProbability: 1
   LightsModule:
     enabled: 1
@@ -28736,7 +28756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9205bc1bbacc90040a998067b5643d16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearBehavior: 2
+  clearBehavior: 1
   cameraShake:
     enabled: 0
     useMainCamera: 0
