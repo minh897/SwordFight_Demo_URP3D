@@ -478,7 +478,6 @@ GameObject:
   - component: {fileID: 2434069297201554618}
   - component: {fileID: 4397456445306445991}
   - component: {fileID: 327944960558083051}
-  - component: {fileID: 3875284894650491411}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -682,26 +681,10 @@ MonoBehaviour:
   lungeDistance: 0
   stretchScale: {x: 0, y: 0, z: 1}
   vfxSwordSlash: {fileID: 991059352814421316}
-  vfxSwordHit: {fileID: 0}
   sfxSwordSwing: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
   minPitch: 0.85
   maxPitch: 1
   volume: 0.553
---- !u!114 &3875284894650491411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4944354138407214497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76136a97161a7db04aecb700d8a6cb6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  uiHealthBar: {fileID: 0}
-  maxHealth: 100
-  currentHealth: 0
 --- !u!1 &8349131999757165588
 GameObject:
   m_ObjectHideFlags: 0

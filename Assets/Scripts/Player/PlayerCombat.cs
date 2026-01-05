@@ -19,7 +19,6 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Particle System")]
     [SerializeField] private ParticleSystem vfxSwordSlash;
-    [SerializeField] private ParticleSystem vfxSwordHit;
 
     [Header("Audio")]
     [SerializeField] private AudioClip sfxSwordSwing;
