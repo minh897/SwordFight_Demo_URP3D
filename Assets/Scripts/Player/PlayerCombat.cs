@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Weapon")]
-    [SerializeField] private BoxCollider swordCollider;
+    [SerializeField] private GameObject sword;
     [SerializeField] private int swordDamage = 10;
 
     [Header("Animation")]
@@ -44,6 +44,10 @@ public class PlayerCombat : MonoBehaviour
     private int lastSwingDirection = 1; // 1 = right, -1 = left
     private int currentSwingDirection;
 
+    public bool IsAttacking() => isAttacking;
+
+    public int GetWeaponDamage() => swordDamage;
+
     void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -51,9 +55,9 @@ public class PlayerCombat : MonoBehaviour
 
     void Start()
     {
-        currentYAngle = swordCollider.transform.localEulerAngles.y;
+        currentYAngle = sword.transform.localEulerAngles.y;
         targetYAngle = currentYAngle + swingAngle.z;
-        currentZScale = swordCollider.transform.localScale.z;
+        currentZScale = sword.transform.localScale.z;
         targetZScale = currentZScale + stretchScale.z;
         currentSwingDirection = lastSwingDirection;
     }
@@ -65,6 +69,7 @@ public class PlayerCombat : MonoBehaviour
         // stop receiving input when attack is performed
         if (isAttacking) return;
 
+        // perform an attack
         if (inputHandler.AttackInput && attackTimer > nextTimeAttack)
         {
             nextTimeAttack = attackCooldown + Time.time;
@@ -74,10 +79,6 @@ public class PlayerCombat : MonoBehaviour
             PlaySwordSlashVFX();
         }
     }
-
-    public bool IsAttacking() => isAttacking;
-
-    public int GetWeaponDamage() => swordDamage;
 
     private void PlaySwordSwingSFX()
     {
@@ -148,7 +149,7 @@ public class PlayerCombat : MonoBehaviour
             // (prevent it to hit 0.2 or 1.1 something like that)
             float t = Mathf.Clamp01(elapsed / halfDuration);
             float yRot = Mathf.Lerp(startYAngle, offsetYAngle, t);
-            swordCollider.transform.localRotation = Quaternion.Euler(0, yRot, 0);
+            sword.transform.localRotation = Quaternion.Euler(0, yRot, 0);
             yield return null;
         }
 
@@ -160,12 +161,12 @@ public class PlayerCombat : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / returnDuration);
             // Ease back from overshoot to final resting angle
             float yRot = Mathf.Lerp(offsetYAngle, endYAngle, t);
-            swordCollider.transform.localRotation = Quaternion.Euler(0, yRot, 0);
+            sword.transform.localRotation = Quaternion.Euler(0, yRot, 0);
             yield return null;
         }
 
         // make sure the rotation hit the target
-        swordCollider.transform.localRotation = Quaternion.Euler(0, endYAngle, 0);
+        sword.transform.localRotation = Quaternion.Euler(0, endYAngle, 0);
         // swap angle for next swing
         currentYAngle = endYAngle;
         targetYAngle = startYAngle;
@@ -205,11 +206,11 @@ public class PlayerCombat : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / halfDuration);
             float zScale = Mathf.Lerp(startZScale, endZScale, t);
-            swordCollider.transform.localScale = new(1, 1, zScale);
+            sword.transform.localScale = new(1, 1, zScale);
             yield return null;
         }
 
-        swordCollider.transform.localScale = targetScale;
+        sword.transform.localScale = targetScale;
         float newStartZScale = endZScale;
         float newTargetZScale = startZScale;
         
@@ -219,7 +220,7 @@ public class PlayerCombat : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / returnDuration);
             float zScale = Mathf.Lerp(newStartZScale, newTargetZScale, t);
-            swordCollider.transform.localScale = new(1, 1, zScale);
+            sword.transform.localScale = new(1, 1, zScale);
             yield return null;
         }
     }

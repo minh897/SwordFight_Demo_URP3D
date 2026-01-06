@@ -20,7 +20,7 @@ public class EnemyHitDetection : MonoBehaviour
     [SerializeField, Range(0, 1)] private float volume;
 
     // components
-    private Health myWellBeing;
+    private Health myHealth;
     private CapsuleCollider myCollider;
     private SquashAndStretch stretchAnim;
     private EnemyDamageFlash damageFlash;
@@ -33,13 +33,15 @@ public class EnemyHitDetection : MonoBehaviour
     private float targetAngleX;
     private Coroutine getHitRoutine;
 
+    public bool IsStunned() => isStunned;
+
     void Awake()
     {
-        myWellBeing = GetComponent<Health>();
+        myHealth = GetComponent<Health>();
+        myCollider = GetComponent<CapsuleCollider>();
         stretchAnim = GetComponent<SquashAndStretch>();
         damageFlash = GetComponent<EnemyDamageFlash>();
         makeTransparent = GetComponent<MakeTransparent>();
-        myCollider = GetComponentInChildren<CapsuleCollider>();
     }
 
     void Start()
@@ -48,26 +50,19 @@ public class EnemyHitDetection : MonoBehaviour
         targetAngleX = currentAngleX + leanAngle.x;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        // check if the colliding object has "Weapon" tag
-        if (!other.CompareTag("Weapon"))
-            return;
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     // check if the colliding object has "Weapon" tag
+    //     if (!other.CompareTag("Weapon"))
+    //         return;
             
-        PlayStunAnim();
-        PlayImpactSFX();
-        PlayImpactVFX(other);
-        PlayDamageFlashVFX();
-        TakeDamageFrom(other);
-        CheckDeadState();
-    }
-
-    public bool IsStunned() => isStunned;
-
-    private void DisableEnemyAfter()
-    {
-        gameObject.SetActive(false);
-    }
+    //     PlayStunAnim();
+    //     PlayImpactSFX();
+    //     PlayImpactVFX(other);
+    //     PlayDamageFlashVFX();
+    //     TakeDamageFrom(other);
+    //     CheckDeadState();
+    // }
 
 #region Refactor
     private void TakeDamageFrom(Collider other)
@@ -77,14 +72,13 @@ public class EnemyHitDetection : MonoBehaviour
             GetComponentInParent<PlayerCombat>().
             GetWeaponDamage();
         // receive damage through IDamageable
-        myWellBeing.TakeDamage(damage);
+        myHealth.TakeDamage(damage);
     }
-
 
     private void CheckDeadState()
     {
         // if the enemy is dead taking damage
-        if (myWellBeing.IsDead)
+        if (myHealth.IsDead)
         {
             Debug.Log("Enemy is dead");
             // turn the enemy transparent to simulate death
@@ -93,9 +87,13 @@ public class EnemyHitDetection : MonoBehaviour
             Invoke(nameof(DisableEnemyAfter), .5f);
         }
     }
-
 #endregion
 
+    private void DisableEnemyAfter()
+    {
+        gameObject.SetActive(false);
+    }
+    
     private void PlayStunAnim()
     {
         if (getHitRoutine != null) StopCoroutine(getHitRoutine);
