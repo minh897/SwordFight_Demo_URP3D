@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 // For easy testing when switching 
 // between methods during runtime
 public enum DetectMethod
 {
-    BoxCast,
+    BoxCastAll,
     OnTriggerEnter,
     OverlapBox,
 }
@@ -20,16 +19,17 @@ public class PlayerHandleSwordHit : MonoBehaviour
     public Vector3 drawBoxSize;
     public DetectMethod detectMethod;
     public LayerMask layerMask;
-    public Collider[] hitColliders;
     [Space]
 
     [SerializeField] private Transform raycastTransform;
     [SerializeField] private BoxCollider swordCollider;
     [SerializeField] private Rigidbody swordRigidbody;
 
-    bool hitDetectSide;
+    bool hitDetect;
     RaycastHit rayHit;
     Vector3 lastPos;
+    Collider[] hitColliders;
+    RaycastHit[] hitRays;
     
     // Prevent multiple hits against the same target
     private HashSet<EnemyHitDetection> hitThisSwing;
@@ -42,7 +42,7 @@ public class PlayerHandleSwordHit : MonoBehaviour
 
     void OnDisable()
     {
-        Array.Clear(hitColliders, 0, hitColliders.Length);
+        // Array.Clear(hitColliders, 0, hitColliders.Length);
         hitThisSwing.Clear();
         enabled = true;
     }
@@ -51,8 +51,8 @@ public class PlayerHandleSwordHit : MonoBehaviour
     {
         MoveLooping();
         
-        if (detectMethod.Equals(DetectMethod.BoxCast))
-            DetectHitUsingBoxCast();
+        if (detectMethod.Equals(DetectMethod.BoxCastAll))
+            DetectHitUsingBoxCastAll();
         else if (detectMethod.Equals(DetectMethod.OverlapBox))
             DetectHitUsingOverlapBox();
     }
@@ -63,53 +63,38 @@ public class PlayerHandleSwordHit : MonoBehaviour
             return;
 
         Debug.Log("OnTriggerEnter Hit : " + other.gameObject.name);
-    }
-
-    private void MoveLooping()
-    {
-        // Move the sword forward using Rigidbody
-        Vector3 moveDir = new(0, 0, 1.0f);
-        swordRigidbody.MovePosition(swordRigidbody.position + (moveSpeed * Time.fixedDeltaTime * moveDir));
-
-        // Loop back to the started position when exceed certain threshold
-        if (swordRigidbody.position.z >= 9.0f)
+        if (other.TryGetComponent<EnemyHitDetection>(out var target))
         {
-            swordRigidbody.MovePosition(lastPos);
-            enabled = false;
+            DeliverHitToTarget(target, other);
         }
     }
 
-    private void MoveParticleToHitPoint(Collider hitCol, ParticleSystem particle)
-    {
-        // Get closest impact point
-        Vector3 hitPosition = hitCol.ClosestPoint(raycastTransform.position);
-
-        // Calculate direction for rotation
-        Vector3 direction = (hitPosition - raycastTransform.position).normalized;
-        Quaternion faceRotation = Quaternion.LookRotation(direction);
-
-        // Set particle at hit position
-        Transform t = particle.transform;
-        t.SetPositionAndRotation(hitPosition, faceRotation);
-    }
-
-    private void DetectHitUsingBoxCast()
+    private void DetectHitUsingBoxCastAll()
     {
         // Test to see if there is a hit using a BoxCast
         // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
         // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         // Also fetch the hit data
-        hitDetectSide = Physics.BoxCast(swordCollider.bounds.center,
+        hitRays = Physics.BoxCastAll(
+            swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
             raycastTransform.right,
-            out rayHit,
             raycastTransform.rotation,
-            maxCastDistance);
+            maxCastDistance, 
+            layerMask);
 
-        if (hitDetectSide)
+        hitDetect = hitRays.Length > 0;
+
+        int i = 0;
+        while (i < hitRays.Length)
         {
             //Output the name of the Collider your Box hit
-            Debug.Log("Boxcast Hit : " + rayHit.collider.name);
+            Debug.Log("BoxCastAll Hit : " + hitRays[i].collider.name);
+            if (hitRays[i].collider.TryGetComponent<EnemyHitDetection>(out var target))
+            {
+                DeliverHitToTarget(target, hitRays[i].collider);
+            }
+            i++;
         }
     }
 
@@ -129,36 +114,68 @@ public class PlayerHandleSwordHit : MonoBehaviour
         while (i < hitColliders.Length)
         {
             // Output all of the collider names
-            Debug.Log("OverlapBox Hit : " + hitColliders[i].name + i);
+            Debug.Log("OverlapBox Hit : " + hitColliders[i].name + " - Count: " + i);
             // Look for Health component in hit collider and call TakeDamage()
             if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
             {
-                // Return if cannot add more target to HashSet because of duplicate
-                if (!hitThisSwing.Add(target)) 
-                    return;
-
-                MoveParticleToHitPoint(hitColliders[i], target.VFXSwordHit());
-                // Enemy take damage
-                target.HandleTakingDamage(damage);
-                // Enemy react to hit
-                target.HandleHitReaction();
+                DeliverHitToTarget(target, hitColliders[i]);
             }
-            // Increase the number of Colliders in the array
             i++;
         }
     }
 
+    private void DeliverHitToTarget(EnemyHitDetection target, Collider collider)
+    {
+        // Return if HashSet cannot be added because of duplicated target
+        if (!hitThisSwing.Add(target))
+            return;
+
+        MoveParticleToHitPoint(collider, target.VFXSwordHit());
+        // Enemy take damage
+        target.HandleTakingDamage(damage);
+        // Enemy react to hit
+        target.HandleHitReaction();
+    }
+
+    private void MoveParticleToHitPoint(Collider hitCol, ParticleSystem particle)
+    {
+        // Get closest impact point
+        Vector3 hitPosition = hitCol.ClosestPoint(raycastTransform.position);
+
+        // Calculate direction for rotation
+        Vector3 direction = (hitPosition - raycastTransform.position).normalized;
+        Quaternion faceRotation = Quaternion.LookRotation(direction);
+
+        // Set particle at hit position
+        Transform t = particle.transform;
+        t.SetPositionAndRotation(hitPosition, faceRotation);
+    }
+
+    private void MoveLooping()
+    {
+        // Move the sword forward using Rigidbody
+        Vector3 moveDir = new(0, 0, 1.0f);
+        swordRigidbody.MovePosition(swordRigidbody.position + (moveSpeed * Time.fixedDeltaTime * moveDir));
+
+        // Loop back to the started position when exceed certain threshold
+        if (swordRigidbody.position.z >= 9.0f)
+        {
+            swordRigidbody.MovePosition(lastPos);
+            enabled = false;
+        }
+    }
+
     //Draw the BoxCast as a gizmo to show where it currently is testing. Click the Gizmos button to see this
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (!Application.isPlaying) 
             return;
 
-        if (detectMethod.Equals(DetectMethod.BoxCast))
+        if (detectMethod.Equals(DetectMethod.BoxCastAll))
         {  
             // Check if there has been a hit yet
             // Then draw a ray according to the hit distance
-            float castDistance = hitDetectSide ? rayHit.distance : maxCastDistance;
+            float castDistance = hitDetect ? rayHit.distance : maxCastDistance;
             DrawBoxCast(castDistance, raycastTransform.position, raycastTransform.right, swordCollider.size);
         }
 
