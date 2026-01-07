@@ -639,6 +639,77 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &785338538
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1348604587}
+    m_Modifications:
+    - target: {fileID: 1465538838009181258, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_Name
+      value: VFX_SwordHit_FireCross
+      objectReference: {fileID: 0}
+    - target: {fileID: 6093441630720237610, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+--- !u!198 &785338539 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6036132328543762761, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+  m_PrefabInstance: {fileID: 785338538}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &785338540 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+  m_PrefabInstance: {fileID: 785338538}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1179929849
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,6 +933,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1526531444067943883, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: vfxSwordHit
+      value: 
+      objectReference: {fileID: 785338539}
     - target: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -880,7 +955,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4998945171980524314, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_Intensity
-      value: 0
+      value: 2.006964
       objectReference: {fileID: 0}
     - target: {fileID: 5108124120958531200, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_Layer
@@ -896,7 +971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6597115485518990273, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6613363122580161008, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_Layer
@@ -980,13 +1055,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8878369985456167164, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 403407569188999034, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5018992799145501789, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 785338540}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       insertIndex: 2
       addedObject: {fileID: 1892104553}
   m_SourcePrefab: {fileID: 100100000, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+--- !u!4 &1348604587 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5018992799145501789, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+  m_PrefabInstance: {fileID: 1348604586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1475382971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,11 +1198,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHandleSwordHit
   maxCastDistance: 0.2
   moveSpeed: 20
+  damage: -4
   drawBoxSize: {x: 0.5, y: 0.5, z: 0.5}
-  detectMethod: 0
+  detectMethod: 2
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+  hitColliders: []
   raycastTransform: {fileID: 395395394}
   swordCollider: {fileID: 1641315061}
   swordRigidbody: {fileID: 1641315062}
@@ -1210,11 +1296,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHandleSwordHit
   maxCastDistance: 0
   moveSpeed: 0
+  damage: 0
   drawBoxSize: {x: 0.5, y: 0.5, z: 0.5}
   detectMethod: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 0
+  hitColliders: []
   raycastTransform: {fileID: 1575874269}
   swordCollider: {fileID: 1727404125}
   swordRigidbody: {fileID: 0}
@@ -1625,8 +1713,8 @@ SceneRoots:
   - {fileID: 2023321948}
   - {fileID: 1641315063}
   - {fileID: 2159281797718884152}
-  - {fileID: 1348604586}
   - {fileID: 1179929852}
   - {fileID: 245901477}
   - {fileID: 955595340213185201}
   - {fileID: 598940705}
+  - {fileID: 1348604586}

@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class EnemyHitDetection : MonoBehaviour
 {
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem vfxSwordHit;
+    
     [Header("Animation")]
     [SerializeField] private float stunDuration;
     [SerializeField] private float pushDuration;
     [SerializeField] private float leanDuration;
     [SerializeField] private float pushBackDistance;
     [SerializeField] private Vector3 leanAngle;
-
-    [Header("Particle System")]
-    [SerializeField] private ParticleSystem vfxSwordHit;
 
     [Header("Audio")]
     [SerializeField] private AudioClip sfxSwordHit;
@@ -21,7 +21,6 @@ public class EnemyHitDetection : MonoBehaviour
 
     // components
     private Health myHealth;
-    private CapsuleCollider myCollider;
     private SquashAndStretch stretchAnim;
     private EnemyDamageFlash damageFlash;
     private MakeTransparent makeTransparent;
@@ -34,11 +33,11 @@ public class EnemyHitDetection : MonoBehaviour
     private Coroutine getHitRoutine;
 
     public bool IsStunned() => isStunned;
+    public ParticleSystem VFXSwordHit() => vfxSwordHit;
 
     void Awake()
     {
         myHealth = GetComponent<Health>();
-        myCollider = GetComponent<CapsuleCollider>();
         stretchAnim = GetComponent<SquashAndStretch>();
         damageFlash = GetComponent<EnemyDamageFlash>();
         makeTransparent = GetComponent<MakeTransparent>();
@@ -50,54 +49,36 @@ public class EnemyHitDetection : MonoBehaviour
         targetAngleX = currentAngleX + leanAngle.x;
     }
 
-    // void OnTriggerEnter(Collider other)
-    // {
-    //     // check if the colliding object has "Weapon" tag
-    //     if (!other.CompareTag("Weapon"))
-    //         return;
-            
-    //     PlayStunAnim();
-    //     PlayImpactSFX();
-    //     PlayImpactVFX(other);
-    //     PlayDamageFlashVFX();
-    //     TakeDamageFrom(other);
-    //     CheckDeadState();
-    // }
-
-#region Refactor
-    private void TakeDamageFrom(Collider other)
+    public void HandleHitReaction()
     {
-        // get weapon damage from PlayerCombat
-        int damage = other.gameObject.
-            GetComponentInParent<PlayerCombat>().
-            GetWeaponDamage();
-        // receive damage through IDamageable
-        myHealth.TakeDamage(damage);
+        PlayStunAnim();
+        PlayImpactSFX();
+        PlaySwordHitVFX();
+        PlayDamageFlashVFX();
     }
 
-    private void CheckDeadState()
+    public void HandleTakingDamage(int damage)
     {
-        // if the enemy is dead taking damage
+        TakingDamage(damage);
+    }
+
+    private void TakingDamage(int damage)
+    {
+        myHealth.TakeDamage(damage);
+
+        // if the enemy is dead after taking damage
         if (myHealth.IsDead)
         {
-            Debug.Log("Enemy is dead");
             // turn the enemy transparent to simulate death
             makeTransparent.SetMatToTransparent(damageFlash.Renderers);
             // disable the enemy GameObject after half a second
             Invoke(nameof(DisableEnemyAfter), .5f);
         }
     }
-#endregion
 
     private void DisableEnemyAfter()
     {
         gameObject.SetActive(false);
-    }
-    
-    private void PlayStunAnim()
-    {
-        if (getHitRoutine != null) StopCoroutine(getHitRoutine);
-        getHitRoutine = StartCoroutine(GetHitRoutine());
     }
 
     private void PlayImpactSFX()
@@ -110,22 +91,11 @@ public class EnemyHitDetection : MonoBehaviour
         damageFlash.FlashColor();
     }
 
-    private void PlayImpactVFX(Collider weaponCollider)
+    private void PlaySwordHitVFX()
     {
-        // Get closest impact point
-        Transform weaponTransform = weaponCollider.transform;
-        Vector3 hitPosition = myCollider.ClosestPoint(weaponTransform.position);
-
-        // Calculate direction for rotation
-        Vector3 direction = (hitPosition - weaponTransform.position).normalized;
-        Quaternion faceRotation = Quaternion.LookRotation(direction);
-
-        // Set particle at hit position
-        Transform t = vfxSwordHit.transform;
-        t.SetPositionAndRotation(hitPosition, faceRotation);
-
         // Activate the particle
         // Make sure the particle and all children are reset
+        vfxSwordHit.gameObject.SetActive(true);
         vfxSwordHit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         vfxSwordHit.Play();
     }
@@ -133,6 +103,12 @@ public class EnemyHitDetection : MonoBehaviour
     private void PlaySquashAndStretchAnim()
     {
         stretchAnim.Play();
+    }
+    
+    private void PlayStunAnim()
+    {
+        if (getHitRoutine != null) StopCoroutine(getHitRoutine);
+        getHitRoutine = StartCoroutine(GetHitRoutine());
     }
 
     private IEnumerator GetHitRoutine()

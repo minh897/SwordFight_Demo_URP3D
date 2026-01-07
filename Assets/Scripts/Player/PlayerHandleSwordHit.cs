@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // For easy testing when switching 
@@ -13,9 +16,11 @@ public class PlayerHandleSwordHit : MonoBehaviour
 {
     public float maxCastDistance;
     public float moveSpeed;
+    public int damage;
     public Vector3 drawBoxSize;
     public DetectMethod detectMethod;
     public LayerMask layerMask;
+    public Collider[] hitColliders;
     [Space]
 
     [SerializeField] private Transform raycastTransform;
@@ -25,10 +30,21 @@ public class PlayerHandleSwordHit : MonoBehaviour
     bool hitDetectSide;
     RaycastHit rayHit;
     Vector3 lastPos;
+    
+    // Prevent multiple hits against the same target
+    private HashSet<EnemyHitDetection> hitThisSwing;
 
     void Start()
     {
         lastPos = swordRigidbody.position;
+        hitThisSwing = new();
+    }
+
+    void OnDisable()
+    {
+        Array.Clear(hitColliders, 0, hitColliders.Length);
+        hitThisSwing.Clear();
+        enabled = true;
     }
 
     void FixedUpdate()
@@ -59,7 +75,22 @@ public class PlayerHandleSwordHit : MonoBehaviour
         if (swordRigidbody.position.z >= 9.0f)
         {
             swordRigidbody.MovePosition(lastPos);
+            enabled = false;
         }
+    }
+
+    private void MoveParticleToHitPoint(Collider hitCol, ParticleSystem particle)
+    {
+        // Get closest impact point
+        Vector3 hitPosition = hitCol.ClosestPoint(raycastTransform.position);
+
+        // Calculate direction for rotation
+        Vector3 direction = (hitPosition - raycastTransform.position).normalized;
+        Quaternion faceRotation = Quaternion.LookRotation(direction);
+
+        // Set particle at hit position
+        Transform t = particle.transform;
+        t.SetPositionAndRotation(hitPosition, faceRotation);
     }
 
     private void DetectHitUsingBoxCast()
@@ -87,7 +118,7 @@ public class PlayerHandleSwordHit : MonoBehaviour
         // Use the OverlapBox to detect if there are any other colliders within this box area.
         // Use the GameObject's center, half the size (as a radius), and rotation. 
         // This creates an invisible box around your GameObject.
-        Collider[] hitColliders = Physics.OverlapBox(
+        hitColliders = Physics.OverlapBox(
             raycastTransform.position, 
             raycastTransform.localScale / 2, 
             raycastTransform.localRotation, 
@@ -99,6 +130,19 @@ public class PlayerHandleSwordHit : MonoBehaviour
         {
             // Output all of the collider names
             Debug.Log("OverlapBox Hit : " + hitColliders[i].name + i);
+            // Look for Health component in hit collider and call TakeDamage()
+            if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
+            {
+                // Return if cannot add more target to HashSet because of duplicate
+                if (!hitThisSwing.Add(target)) 
+                    return;
+
+                MoveParticleToHitPoint(hitColliders[i], target.VFXSwordHit());
+                // Enemy take damage
+                target.HandleTakingDamage(damage);
+                // Enemy react to hit
+                target.HandleHitReaction();
+            }
             // Increase the number of Colliders in the array
             i++;
         }
