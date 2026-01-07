@@ -5,15 +5,17 @@ using UnityEngine;
 public enum DetectMethod
 {
     BoxCast,
-    OnTriggerEnter
+    OnTriggerEnter,
+    OverlapBox,
 }
 
 public class PlayerHandleSwordHit : MonoBehaviour
 {
-    public float maxDistance;
+    public float maxCastDistance;
     public float moveSpeed;
     public Vector3 drawBoxSize;
     public DetectMethod detectMethod;
+    public LayerMask layerMask;
     [Space]
 
     [SerializeField] private Transform raycastTransform;
@@ -22,13 +24,10 @@ public class PlayerHandleSwordHit : MonoBehaviour
 
     bool hitDetectSide;
     RaycastHit rayHit;
-    TagHandle enemyTag;
     Vector3 lastPos;
 
     void Start()
     {
-        enemyTag = TagHandle.GetExistingTag("Enemy");
-        detectMethod = DetectMethod.BoxCast;
         lastPos = swordRigidbody.position;
     }
 
@@ -36,10 +35,18 @@ public class PlayerHandleSwordHit : MonoBehaviour
     {
         MoveLooping();
         
-        if (detectMethod == DetectMethod.BoxCast)
-        {
+        if (detectMethod.Equals(DetectMethod.BoxCast))
             DetectHitUsingBoxCast();
-        }
+        else if (detectMethod.Equals(DetectMethod.OverlapBox))
+            DetectHitUsingOverlapBox();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!detectMethod.Equals(DetectMethod.OnTriggerEnter))
+            return;
+
+        Debug.Log("OnTriggerEnter Hit : " + other.gameObject.name);
     }
 
     private void MoveLooping()
@@ -55,35 +62,45 @@ public class PlayerHandleSwordHit : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (detectMethod == DetectMethod.BoxCast)
-        {
-            return;
-        }
-
-        if (other.CompareTag(enemyTag))
-        {
-            Debug.Log("Hit : " + other.gameObject.name);
-        }
-    }
-
     private void DetectHitUsingBoxCast()
     {
-        //Test to see if there is a hit using a BoxCast
-        //Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
-        //Also fetch the hit data
+        // Test to see if there is a hit using a BoxCast
+        // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
+        // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
+        // Also fetch the hit data
         hitDetectSide = Physics.BoxCast(swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
             raycastTransform.right,
             out rayHit,
             raycastTransform.rotation,
-            maxDistance);
+            maxCastDistance);
 
         if (hitDetectSide)
         {
             //Output the name of the Collider your Box hit
-            Debug.Log("Hit : " + rayHit.collider.name);
+            Debug.Log("Boxcast Hit : " + rayHit.collider.name);
+        }
+    }
+
+    private void DetectHitUsingOverlapBox()
+    {
+        // Use the OverlapBox to detect if there are any other colliders within this box area.
+        // Use the GameObject's center, half the size (as a radius), and rotation. 
+        // This creates an invisible box around your GameObject.
+        Collider[] hitColliders = Physics.OverlapBox(
+            raycastTransform.position, 
+            raycastTransform.localScale / 2, 
+            raycastTransform.localRotation, 
+            layerMask);
+
+        int i = 0;
+        // Check when there is a new collider coming into contact with the box
+        while (i < hitColliders.Length)
+        {
+            // Output all of the collider names
+            Debug.Log("OverlapBox Hit : " + hitColliders[i].name + i);
+            // Increase the number of Colliders in the array
+            i++;
         }
     }
 
@@ -93,18 +110,33 @@ public class PlayerHandleSwordHit : MonoBehaviour
         if (!Application.isPlaying) 
             return;
 
-        //Check if there has been a hit yet
-        float castDistanceSide = hitDetectSide ? rayHit.distance : maxDistance;
-        
-        Gizmos.color = Color.red;
-        DrawBoxCast(castDistanceSide, raycastTransform.position, raycastTransform.right);
+        if (detectMethod.Equals(DetectMethod.BoxCast))
+        {  
+            // Check if there has been a hit yet
+            // Then draw a ray according to the hit distance
+            float castDistance = hitDetectSide ? rayHit.distance : maxCastDistance;
+            DrawBoxCast(castDistance, raycastTransform.position, raycastTransform.right, swordCollider.size);
+        }
+
+        if (detectMethod.Equals(DetectMethod.OverlapBox))
+        {
+            // Draw a cube where the OverlapBox is (positioned where your GameObject is as well as a size)
+            DrawOverlapBox(raycastTransform.position, swordCollider.size);
+        }
     }
 
-    private void DrawBoxCast(float drawDistance, Vector3 drawPosition, Vector3 drawDirection)
+    private void DrawBoxCast(float distance, Vector3 position, Vector3 direction, Vector3 scale)
     {
+        Gizmos.color = Color.red;
         //Draw a Ray forward from GameObject toward the hit
-        Gizmos.DrawRay(drawPosition, drawDirection * drawDistance);
+        Gizmos.DrawRay(position, direction * distance);
         //Draw a cube that extends to where the hit exists
-        Gizmos.DrawWireCube(drawPosition + drawDirection * drawDistance, drawBoxSize);
+        Gizmos.DrawWireCube(position + direction * distance, scale);
+    }
+
+    private void DrawOverlapBox(Vector3 position, Vector3 scale)
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(position, scale);
     }
 }
