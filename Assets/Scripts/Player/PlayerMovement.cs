@@ -20,7 +20,8 @@ public class PlayerMovement : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody>();
 
-        // if (inputHandler.MoveInput.Equals(Vector2.zero)) Debug.Log("input is zero");
+        if (inputHandler.MoveInput.Equals(Vector2.zero)) 
+            Debug.LogWarning("Input is zero");
     }
 
     void Update()

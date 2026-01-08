@@ -6,7 +6,7 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("Weapon")]
     [SerializeField] private GameObject sword;
-    [SerializeField] private int swordDamage = 10;
+    [SerializeField] private float swordDamage = 10;
 
     [Header("Animation")]
     [SerializeField] private float attackCooldown = 0.5f;
@@ -27,6 +27,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField, Range(0, 1)] private float volume;
 
     private PlayerInputHandler inputHandler;
+    private PlayerSwordHitHandler swordHitHandler;
     private Coroutine attackAnimationCo;
 
     // input state
@@ -46,11 +47,12 @@ public class PlayerCombat : MonoBehaviour
 
     public bool IsAttacking() => isAttacking;
 
-    public int GetWeaponDamage() => swordDamage;
+    public float GetWeaponDamage() => swordDamage;
 
     void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
+        swordHitHandler = GetComponent<PlayerSwordHitHandler>();
     }
 
     void Start()
@@ -82,7 +84,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void PlaySwordSwingSFX()
     {
-        SoundFXManager.instance.PlaySoundFXClip(sfxSwordSwing, transform, volume, minPitch, maxPitch);
+        SoundFXManager.instance.PlaySFX(sfxSwordSwing, transform, volume, minPitch, maxPitch);
     }
 
     private void PlaySwordSlashVFX()
@@ -114,6 +116,7 @@ public class PlayerCombat : MonoBehaviour
     private IEnumerator AttackAnimationRoutine()
     {
         isAttacking = true;
+        swordHitHandler.enabled = true;
         
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
@@ -121,6 +124,7 @@ public class PlayerCombat : MonoBehaviour
         yield return swingCo;
 
         isAttacking = false;
+        swordHitHandler.enabled = false;
         // flip swing direction
         currentSwingDirection *= -1;
         // change overshoot angle after each swing

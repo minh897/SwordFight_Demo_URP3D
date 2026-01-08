@@ -98,7 +98,7 @@ public class SquashAndStretch : MonoBehaviour
     {
         if (axisToAffect == SquashStretchAxis.None)
         {
-            Debug.Log("Axis to affect is set to None.", gameObject);
+            // Debug.Log("Axis to affect is set to None.", gameObject);
             return;
         }
 

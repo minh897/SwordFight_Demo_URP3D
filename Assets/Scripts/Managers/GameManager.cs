@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentScene = SceneManager.GetActiveScene().name;
-        Debug.Log("Active scene "+currentScene);
+        // Debug.Log("Active scene "+currentScene);
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
         // TODO: Find a way to read input without directly using InputSystem
         if (isGamePause)
         {
-            Debug.Log("Game is pause");
+            // Debug.Log("Game is pause");
             var restartInput = InputSystem.actions.FindActionMap("UI").FindAction("Restart");
             if (restartInput.WasPressedThisFrame())
             {
@@ -40,25 +40,25 @@ public class GameManager : MonoBehaviour
     {
         if (obj.CompareTag("Enemy"))
         {
-            Debug.Log("Check win condition");
+            // Debug.Log("Check win condition");
             // pause the game
             PauseGame();
             // display win text
             winText.transform.parent.gameObject.SetActive(true);
             // enable UI input action
             InputSystem.actions.FindActionMap("UI").Enable();
-            Debug.Log("UI action is " + InputSystem.actions.FindActionMap("UI").enabled);
+            // Debug.Log("UI action is " + InputSystem.actions.FindActionMap("UI").enabled);
         }
 
         if (obj.CompareTag("Player"))
         {
-            Debug.Log("Check lose condition");
+            // Debug.Log("Check lose condition");
         }
     }
 
     private void Restart()
     {
-        Debug.Log("Restart game");
+        // Debug.Log("Restart game");
         ResumeGame();
         SceneManager.LoadScene(currentScene);
     }

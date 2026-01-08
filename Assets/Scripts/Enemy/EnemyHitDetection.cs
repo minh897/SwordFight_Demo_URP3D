@@ -51,18 +51,13 @@ public class EnemyHitDetection : MonoBehaviour
 
     public void HandleHitReaction()
     {
-        PlayStunAnim();
         PlayImpactSFX();
+        PlayStunAnim();
         PlaySwordHitVFX();
         PlayDamageFlashVFX();
     }
 
-    public void HandleTakingDamage(int damage)
-    {
-        TakingDamage(damage);
-    }
-
-    private void TakingDamage(int damage)
+    public void HandleTakingDamage(float damage)
     {
         myHealth.TakeDamage(damage);
 
@@ -83,7 +78,7 @@ public class EnemyHitDetection : MonoBehaviour
 
     private void PlayImpactSFX()
     {
-        SoundFXManager.instance.PlaySoundFXClip(sfxSwordHit, transform, volume, minPitch, maxPitch);
+        SoundFXManager.instance.PlaySFX(sfxSwordHit, transform, volume, minPitch, maxPitch);
     }
 
     private void PlayDamageFlashVFX()

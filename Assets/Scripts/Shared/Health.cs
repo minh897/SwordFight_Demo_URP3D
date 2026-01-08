@@ -18,14 +18,14 @@ public class Health : MonoBehaviour, IDamageable
         healthSliderUI.value = currentHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         HandleHealth(damage);
         HandleDeath();
         HandleHealthUI();
     }
 
-    private void HandleHealth(int damage)
+    private void HandleHealth(float damage)
     {
         currentHealth -= damage;
     }

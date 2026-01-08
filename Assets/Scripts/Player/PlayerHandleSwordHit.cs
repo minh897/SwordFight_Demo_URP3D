@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,23 +25,20 @@ public class PlayerHandleSwordHit : MonoBehaviour
     [SerializeField] private Rigidbody swordRigidbody;
 
     bool hitDetect;
+    float lastZPos;
     RaycastHit rayHit;
-    Vector3 lastPos;
-    Collider[] hitColliders;
-    RaycastHit[] hitRays;
     
     // Prevent multiple hits against the same target
     private HashSet<EnemyHitDetection> hitThisSwing;
 
     void Start()
     {
-        lastPos = swordRigidbody.position;
+        lastZPos = swordRigidbody.position.z;
         hitThisSwing = new();
     }
 
     void OnDisable()
     {
-        // Array.Clear(hitColliders, 0, hitColliders.Length);
         hitThisSwing.Clear();
         enabled = true;
     }
@@ -50,19 +46,20 @@ public class PlayerHandleSwordHit : MonoBehaviour
     void FixedUpdate()
     {
         MoveLooping();
-        
+
         if (detectMethod.Equals(DetectMethod.BoxCastAll))
             DetectHitUsingBoxCastAll();
         else if (detectMethod.Equals(DetectMethod.OverlapBox))
             DetectHitUsingOverlapBox();
     }
 
+#region Hit Detection Methods
     void OnTriggerEnter(Collider other)
     {
         if (!detectMethod.Equals(DetectMethod.OnTriggerEnter))
             return;
 
-        Debug.Log("OnTriggerEnter Hit : " + other.gameObject.name);
+        // Debug.Log("OnTriggerEnter Hit : " + other.gameObject.name);
         if (other.TryGetComponent<EnemyHitDetection>(out var target))
         {
             DeliverHitToTarget(target, other);
@@ -71,11 +68,10 @@ public class PlayerHandleSwordHit : MonoBehaviour
 
     private void DetectHitUsingBoxCastAll()
     {
-        // Test to see if there is a hit using a BoxCast
         // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
         // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         // Also fetch the hit data
-        hitRays = Physics.BoxCastAll(
+        RaycastHit[] hitRays = Physics.BoxCastAll(
             swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
             raycastTransform.right,
@@ -86,10 +82,10 @@ public class PlayerHandleSwordHit : MonoBehaviour
         hitDetect = hitRays.Length > 0;
 
         int i = 0;
+        // Check when there is a new collider coming into contact with the box
         while (i < hitRays.Length)
         {
-            //Output the name of the Collider your Box hit
-            Debug.Log("BoxCastAll Hit : " + hitRays[i].collider.name);
+            // Debug.Log("BoxCastAll Hit : " + hitRays[i].collider.name);
             if (hitRays[i].collider.TryGetComponent<EnemyHitDetection>(out var target))
             {
                 DeliverHitToTarget(target, hitRays[i].collider);
@@ -103,7 +99,7 @@ public class PlayerHandleSwordHit : MonoBehaviour
         // Use the OverlapBox to detect if there are any other colliders within this box area.
         // Use the GameObject's center, half the size (as a radius), and rotation. 
         // This creates an invisible box around your GameObject.
-        hitColliders = Physics.OverlapBox(
+        Collider[] overlapColliders = Physics.OverlapBox(
             raycastTransform.position, 
             raycastTransform.localScale / 2, 
             raycastTransform.localRotation, 
@@ -111,19 +107,21 @@ public class PlayerHandleSwordHit : MonoBehaviour
 
         int i = 0;
         // Check when there is a new collider coming into contact with the box
-        while (i < hitColliders.Length)
+        while (i < overlapColliders.Length)
         {
             // Output all of the collider names
-            Debug.Log("OverlapBox Hit : " + hitColliders[i].name + " - Count: " + i);
+            // Debug.Log("OverlapBox Hit : " + overlapColliders[i].name + " - Count: " + i);
             // Look for Health component in hit collider and call TakeDamage()
-            if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
+            if (overlapColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
             {
-                DeliverHitToTarget(target, hitColliders[i]);
+                DeliverHitToTarget(target, overlapColliders[i]);
             }
             i++;
         }
     }
+#endregion    
 
+#region Helper Functions
     private void DeliverHitToTarget(EnemyHitDetection target, Collider collider)
     {
         // Return if HashSet cannot be added because of duplicated target
@@ -160,11 +158,18 @@ public class PlayerHandleSwordHit : MonoBehaviour
         // Loop back to the started position when exceed certain threshold
         if (swordRigidbody.position.z >= 9.0f)
         {
-            swordRigidbody.MovePosition(lastPos);
+            Vector3 newPos = new(
+                swordRigidbody.position.x, 
+                swordRigidbody.position.y, 
+                lastZPos);
+
+            swordRigidbody.MovePosition(newPos);
             enabled = false;
         }
     }
+#endregion
 
+#region Debugging
     //Draw the BoxCast as a gizmo to show where it currently is testing. Click the Gizmos button to see this
     private void OnDrawGizmos()
     {
@@ -200,4 +205,5 @@ public class PlayerHandleSwordHit : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(position, scale);
     }
+#endregion
 }
