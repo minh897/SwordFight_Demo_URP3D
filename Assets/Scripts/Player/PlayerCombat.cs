@@ -51,6 +51,8 @@ public class PlayerCombat : MonoBehaviour
 
     public float GetWeaponDamage() => swordDamage;
 
+    public int GetSwingDirection() => currentSwingDirection;
+
     void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -67,7 +69,7 @@ public class PlayerCombat : MonoBehaviour
         currentSwingDirection = lastSwingDirection;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         attackTimer = Time.time;
 
@@ -96,16 +98,11 @@ public class PlayerCombat : MonoBehaviour
         // if swing angle has changed
         if (currentSwingDirection != lastSwingDirection)
         {
-            // flip the swordslash direction arcodingly
-            FlipSwordSlash(currentSwingDirection);
+            // flip the swordslash direction
+            vfxSwordSlash.transform.localRotation =
+                currentSwingDirection == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
             lastSwingDirection = currentSwingDirection;
         }
-    }
-
-    private void FlipSwordSlash(int direction)
-    {
-        vfxSwordSlash.transform.localRotation =
-            direction == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
     }
 
     private void PlayAttackAnimation()

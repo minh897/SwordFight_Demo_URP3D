@@ -12,10 +12,6 @@ public class PlayerSwordHitHandler : MonoBehaviour
     [SerializeField] private BoxCollider swordCollider;
     [SerializeField] private Rigidbody swordRigidbody;
 
-    private bool hitDetect;
-    private float playerDamage;
-    private RaycastHit rayHit;
-
     // Only contains unique element
     private HashSet<EnemyHitDetection> hitThisSwing;
     private PlayerCombat playerCombat;
@@ -23,22 +19,7 @@ public class PlayerSwordHitHandler : MonoBehaviour
     void Awake()
     {
         playerCombat = GetComponent<PlayerCombat>();
-    }
-
-    void Start()
-    {
         hitThisSwing = new();
-        enabled = false;
-    }
-
-    void OnEnable()
-    {
-        playerDamage = playerCombat.GetWeaponDamage();
-    }
-
-    void FixedUpdate()
-    {
-        DetectHit();
     }
 
     void OnDisable()
@@ -46,21 +27,26 @@ public class PlayerSwordHitHandler : MonoBehaviour
         hitThisSwing.Clear();
     }
 
+    void FixedUpdate()
+    {
+        DetectHits();
+    }
+
 #region Helper functions
-    private void DetectHit()
+    private void DetectHits()
     {
         // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
         // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         // Also fetch the hit data
+        int  direction = playerCombat.GetSwingDirection();
+
         RaycastHit[] hitRays = Physics.BoxCastAll(
             swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
-            raycastTransform.right,
+            raycastTransform.right * direction,
             raycastTransform.rotation,
             maxCastDistance, 
             layerMask);
-
-        hitDetect = hitRays.Length > 0;
 
         int i = 0;
         // Check when there is a new collider coming into contact with the box
@@ -83,7 +69,7 @@ public class PlayerSwordHitHandler : MonoBehaviour
 
         MoveVFXToHitPoint(collider, target.VFXSwordHit());
         // Enemy take damage
-        target.HandleTakingDamage(playerDamage);
+        target.HandleTakingDamage(playerCombat.GetWeaponDamage());
         // Enemy react to hit
         target.HandleHitReaction();
     }
@@ -95,11 +81,14 @@ public class PlayerSwordHitHandler : MonoBehaviour
 
         // Calculate direction for rotation
         Vector3 direction = (hitPosition - raycastTransform.position).normalized;
-        Quaternion faceRotation = Quaternion.LookRotation(direction);
+        if (!direction.Equals(Vector3.zero))
+        {
+            Quaternion faceRotation = Quaternion.LookRotation(direction);    
+            // Set particle at hit position
+            Transform t = particle.transform;
+            t.SetPositionAndRotation(hitPosition, faceRotation);
+        }
 
-        // Set particle at hit position
-        Transform t = particle.transform;
-        t.SetPositionAndRotation(hitPosition, faceRotation);
     }
 #endregion
 
