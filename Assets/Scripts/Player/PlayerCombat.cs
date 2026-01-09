@@ -26,9 +26,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float maxPitch;
     [SerializeField, Range(0, 1)] private float volume;
 
+    // components
     private PlayerInputHandler inputHandler;
     private PlayerSwordHitHandler swordHitHandler;
-    private Coroutine attackAnimationCo;
+    private AudioSource sfxSource;
 
     // input state
     private bool isAttacking = false;
@@ -37,13 +38,14 @@ public class PlayerCombat : MonoBehaviour
     private float attackTimer = 0f;
     private float nextTimeAttack = 0f;
 
-    // animation data
+    // animation settings
     private float currentYAngle;
     private float targetYAngle;
     private float currentZScale;
     private float targetZScale;
     private int lastSwingDirection = 1; // 1 = right, -1 = left
     private int currentSwingDirection;
+    private Coroutine attackAnimationCo;
 
     public bool IsAttacking() => isAttacking;
 
@@ -53,6 +55,7 @@ public class PlayerCombat : MonoBehaviour
     {
         inputHandler = GetComponent<PlayerInputHandler>();
         swordHitHandler = GetComponent<PlayerSwordHitHandler>();
+        sfxSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -76,15 +79,15 @@ public class PlayerCombat : MonoBehaviour
         {
             nextTimeAttack = attackCooldown + Time.time;
 
-            PlayAttackAnimation();
             PlaySwordSwingSFX();
+            PlayAttackAnimation();
             PlaySwordSlashVFX();
         }
     }
 
     private void PlaySwordSwingSFX()
     {
-        SoundFXManager.instance.PlaySFX(sfxSwordSwing, transform, volume, minPitch, maxPitch);
+        AudioManager.Instance.PlaySFX(sfxSource, sfxSwordSwing, volume, minPitch, maxPitch);
     }
 
     private void PlaySwordSlashVFX()

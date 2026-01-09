@@ -24,6 +24,7 @@ public class EnemyHitDetection : MonoBehaviour
     private SquashAndStretch stretchAnim;
     private EnemyDamageFlash damageFlash;
     private MakeTransparent makeTransparent;
+    private AudioSource sfxSource;
 
     // states
     private bool isStunned = false;
@@ -41,6 +42,7 @@ public class EnemyHitDetection : MonoBehaviour
         stretchAnim = GetComponent<SquashAndStretch>();
         damageFlash = GetComponent<EnemyDamageFlash>();
         makeTransparent = GetComponent<MakeTransparent>();
+        sfxSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -78,7 +80,8 @@ public class EnemyHitDetection : MonoBehaviour
 
     private void PlayImpactSFX()
     {
-        SoundFXManager.instance.PlaySFX(sfxSwordHit, transform, volume, minPitch, maxPitch);
+        AudioManager.Instance.PlaySFX(sfxSource, sfxSwordHit, volume, minPitch, maxPitch);
+        // SoundFXManager.instance.PlaySFX(sfxSwordHit, transform, volume, minPitch, maxPitch);
     }
 
     private void PlayDamageFlashVFX()
