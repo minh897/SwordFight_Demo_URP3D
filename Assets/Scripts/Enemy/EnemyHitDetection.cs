@@ -4,7 +4,8 @@ using UnityEngine;
 public class EnemyHitDetection : MonoBehaviour
 {
     [Header("Particles")]
-    [SerializeField] private ParticleSystem vfxSwordHit;
+    [SerializeField] private ParticleSystem vfxImpact;
+    [SerializeField] private ParticleSystem vfxExplosion;
     
     [Header("Animation")]
     [SerializeField] private float stunDuration;
@@ -34,7 +35,7 @@ public class EnemyHitDetection : MonoBehaviour
     private Coroutine getHitRoutine;
 
     public bool IsStunned() => isStunned;
-    public ParticleSystem VFXSwordHit() => vfxSwordHit;
+    public ParticleSystem VFXSwordHit() => vfxImpact;
 
     void Awake()
     {
@@ -55,7 +56,7 @@ public class EnemyHitDetection : MonoBehaviour
     {
         PlayImpactSFX();
         PlayStunAnim();
-        PlaySwordHitVFX();
+        PlayImpactVFX(vfxImpact);
         PlayDamageFlashVFX();
     }
 
@@ -63,11 +64,13 @@ public class EnemyHitDetection : MonoBehaviour
     {
         myHealth.TakeDamage(damage);
 
-        // if the enemy is dead after taking damage
+        // handle enemy dead state
         if (myHealth.IsDead)
         {
             // turn the enemy transparent to simulate death
             makeTransparent.SetMatToTransparent(damageFlash.Renderers);
+            // play enemy explosion vfx
+            PlayImpactVFX(vfxExplosion);
             // disable the enemy GameObject after half a second
             Invoke(nameof(DisableEnemyAfter), .5f);
         }
@@ -81,7 +84,6 @@ public class EnemyHitDetection : MonoBehaviour
     private void PlayImpactSFX()
     {
         AudioManager.Instance.PlaySFX(sfxSource, sfxSwordHit, volume, minPitch, maxPitch);
-        // SoundFXManager.instance.PlaySFX(sfxSwordHit, transform, volume, minPitch, maxPitch);
     }
 
     private void PlayDamageFlashVFX()
@@ -89,13 +91,13 @@ public class EnemyHitDetection : MonoBehaviour
         damageFlash.FlashColor();
     }
 
-    private void PlaySwordHitVFX()
+    private void PlayImpactVFX(ParticleSystem particle)
     {
         // Activate the particle
         // Make sure the particle and all children are reset
-        vfxSwordHit.gameObject.SetActive(true);
-        vfxSwordHit.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        vfxSwordHit.Play();
+        particle.gameObject.SetActive(true);
+        particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particle.Play();
     }
 
     private void PlaySquashAndStretchAnim()
