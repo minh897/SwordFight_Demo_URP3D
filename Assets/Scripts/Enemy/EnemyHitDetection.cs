@@ -16,6 +16,7 @@ public class EnemyHitDetection : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioClip sfxSwordHit;
+    [SerializeField] private AudioClip sfxDeath;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
     [SerializeField, Range(0, 1)] private float volume;
@@ -54,9 +55,9 @@ public class EnemyHitDetection : MonoBehaviour
 
     public void HandleHitReaction()
     {
-        PlayImpactSFX();
+        PlaySFX(sfxSwordHit);
+        PlayVFX(vfxImpact);
         PlayStunAnim();
-        PlayImpactVFX(vfxImpact);
         PlayDamageFlashVFX();
     }
 
@@ -70,7 +71,9 @@ public class EnemyHitDetection : MonoBehaviour
             // turn the enemy transparent to simulate death
             makeTransparent.SetMatToTransparent(damageFlash.Renderers);
             // play enemy explosion vfx
-            PlayImpactVFX(vfxExplosion);
+            PlayVFX(vfxExplosion);
+            // play enemy death sound
+            PlaySFX(sfxDeath);
             // disable the enemy GameObject after half a second
             Invoke(nameof(DisableEnemyAfter), .5f);
         }
@@ -81,9 +84,9 @@ public class EnemyHitDetection : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void PlayImpactSFX()
+    private void PlaySFX(AudioClip clip)
     {
-        AudioManager.Instance.PlaySFX(sfxSource, sfxSwordHit, volume, minPitch, maxPitch);
+        AudioManager.Instance.PlaySFX(sfxSource, clip, volume, minPitch, maxPitch);
     }
 
     private void PlayDamageFlashVFX()
@@ -91,7 +94,7 @@ public class EnemyHitDetection : MonoBehaviour
         damageFlash.FlashColor();
     }
 
-    private void PlayImpactVFX(ParticleSystem particle)
+    private void PlayVFX(ParticleSystem particle)
     {
         // Activate the particle
         // Make sure the particle and all children are reset
