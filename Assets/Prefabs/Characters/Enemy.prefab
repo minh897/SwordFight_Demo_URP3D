@@ -376,6 +376,7 @@ MonoBehaviour:
   pushBackDistance: 0
   leanAngle: {x: -45, y: 0, z: 0}
   sfxSwordHit: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
+  sfxDeath: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
   minPitch: 1
   maxPitch: 1.2
   volume: 0.415
