@@ -85,9 +85,6 @@ public class SquashAndStretch : MonoBehaviour
 
     public void Play()
     {
-        // if (looping && !canBeOverwritten) 
-        //     return;
-
         if (!canBeOverwritten)
             return;
 
@@ -105,33 +102,11 @@ public class SquashAndStretch : MonoBehaviour
         if (playsEveryTime && resetToInitialScaleAfterAnimation)
             transformToAffect.localScale = _initialScaleVector;
 
-        // if (_squashAndStretchCoroutine != null)
-        // {
-        //     StopCoroutine(_squashAndStretchCoroutine);
-        //     if (playsEveryTime && resetToInitialScaleAfterAnimation)
-        //         transformToAffect.localScale = _initialScaleVector;
-        // }
-        
         _squashAndStretchCoroutine = StartCoroutine(SquashAndStretchEffect());
     }
 
     private IEnumerator SquashAndStretchEffect()
     {
-        // do
-        // {
-            
-        // } while (looping);
-
-        // if (!playsEveryTime)
-        // {
-        //     float random = UnityEngine.Random.Range(0, 100f);
-        //     if (random > chanceToPlay)
-        //     {
-        //         yield return null;
-        //         continue;
-        //     }
-        // }
-        
         if (reverseAnimationCurveAfterPlaying)
             _isReversed = !_isReversed;
         
@@ -178,29 +153,5 @@ public class SquashAndStretch : MonoBehaviour
 
         if (resetToInitialScaleAfterAnimation)
             transformToAffect.localScale = originalScale;
-
-        // if (looping)
-        //     yield return _loopingDelayWaitForSeconds;
     }
-
-    // public void SetLooping(bool shouldLoop)
-    // {
-    //     looping = shouldLoop;
-    // }
-
-    // public void Setup(SquashStretchAxis axis, float time, float zeroMap, float oneMap, AnimationCurve curve,
-    //     bool loop, float delay, bool playImmediately = false)
-    // {
-    //     axisToAffect = axis;
-    //     animationDuration = time;
-    //     initialScale = zeroMap;
-    //     maximumScale = oneMap;
-    //     squashAndStretchCurve = curve;
-    //     looping = loop;
-    //     loopingDelay = delay;
-
-    //     _loopingDelayWaitForSeconds = new WaitForSeconds(loopingDelay);
-
-    //     if (playImmediately) CheckForAndStartCoroutine();
-    // }
 }

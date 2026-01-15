@@ -69,30 +69,13 @@ public class PlayerSwordHitHandler : MonoBehaviour
         if (!hitThisSwing.Add(target))
             return;
 
-        MoveVFXToHitPoint(collider, target.VFXSwordHit());
         // Enemy take damage
-        target.HandleTakingDamage(playerCombat.GetWeaponDamage());
+        float damage = playerCombat.GetWeaponDamage();
+        target.HandleTakingDamage(damage);
         // Enemy react to hit
-        target.HandleHitReaction();
+        target.HandleHitReaction(collider, raycastTransform.position);
         // Shake camera
         shakeCamera.PlayBounceShake();
     }
-
-    private void MoveVFXToHitPoint(Collider hitCol, ParticleSystem particle)
-    {
-        // Get closest impact point
-        Vector3 hitPosition = hitCol.ClosestPoint(raycastTransform.position);
-
-        // Calculate direction for rotation
-        Vector3 direction = (hitPosition - raycastTransform.position).normalized;
-        if (!direction.Equals(Vector3.zero))
-        {
-            Quaternion faceRotation = Quaternion.LookRotation(direction);    
-            // Set particle at hit position
-            Transform t = particle.transform;
-            t.SetPositionAndRotation(hitPosition, faceRotation);
-        }
-
-    }
-    
+   
 }

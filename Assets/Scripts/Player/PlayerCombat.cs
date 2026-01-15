@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void PlaySwordSwingSFX()
     {
-        AudioManager.Instance.PlaySFX(sfxSource, sfxSwordSwing, volume, minPitch, maxPitch);
+        AudioManager.Instance.PlaySFX(sfxSwordSwing, sfxSource, volume, minPitch, maxPitch);
     }
 
     public void PlaySwordSlashVFX()

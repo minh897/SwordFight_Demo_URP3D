@@ -30,7 +30,7 @@ public class EnemyFollow : MonoBehaviour
     void FixedUpdate()
     {
         // if enemy is stunned then stop all movement
-        if (hitDetection.IsStunned()) return;
+        if (hitDetection.GetHit) return;
 
         // enemy can only rotate smoothly along the horizontal axis
         // give it a more natural feel than just move to target rotation immediately

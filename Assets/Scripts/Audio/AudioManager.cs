@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void PlaySFX(AudioSource sfxSource, AudioClip clip, float volume, float minPitch, float maxPitch)
+    public void PlaySFX(AudioClip clip, AudioSource sfxSource, float volume, float minPitch, float maxPitch)
     {
         if (!clip)
         {

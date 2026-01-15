@@ -119,6 +119,64 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &89004100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+  m_PrefabInstance: {fileID: 4343768254885701084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &89004104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89004100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e6bd67cf5ea711caad627cd9d193cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  stunDuration: 0.3
+  pushDuration: 0.1
+  pushDistance: 0.5
+  leanDuration: 0.2
+  leanAngle: {x: -30, y: 0, z: 0}
+--- !u!114 &89004112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89004100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe37b6213f8adcf9b25e3820b5b75bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  vfxImpact: {fileID: 157102819}
+  vfxExplosion: {fileID: 1471236196}
+--- !u!114 &89004113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89004100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11e77fb9e16f2360f8c1c79e0a071612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  sfxSwordHit: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
+  sfxDeath: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
+  minPitch: 0.85
+  maxPitch: 1
+  volume: 0.633
+--- !u!198 &157102819 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 677137954078002547, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+  m_PrefabInstance: {fileID: 4343768254885701084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,6 +432,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &1471236196 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8130493611254400795, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+  m_PrefabInstance: {fileID: 4343768254885701084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1501373148
 GameObject:
   m_ObjectHideFlags: 0
@@ -15815,15 +15878,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6597115485518990273, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6597115485518990273, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6597115485518990273, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6737465868347739629, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6737465868347739629, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: followSpeed
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6737465868347739629, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: followTarget
@@ -15876,7 +15947,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 89004104}
+    - targetCorrespondingSourceObject: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      insertIndex: 8
+      addedObject: {fileID: 89004112}
+    - targetCorrespondingSourceObject: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      insertIndex: 9
+      addedObject: {fileID: 89004113}
   m_SourcePrefab: {fileID: 100100000, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
 --- !u!114 &4406794184684221184
 MonoBehaviour:
@@ -16376,7 +16456,7 @@ MonoBehaviour:
   overshootYAngle: -30
   swingAngle: {x: 0, y: 0, z: -180}
   lungeDuration: 0.1
-  lungeDistance: 1
+  lungeDistance: 0
   stretchScale: {x: 0, y: 0, z: 0.6}
 --- !u!1 &6402281735705460206
 GameObject:
