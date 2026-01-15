@@ -15,10 +15,12 @@ public class PlayerSwordHitHandler : MonoBehaviour
     // Only contains unique element
     private HashSet<EnemyHitDetection> hitThisSwing;
     private PlayerCombat playerCombat;
+    private ShakeCamera shakeCamera;
 
     void Awake()
     {
         playerCombat = GetComponent<PlayerCombat>();
+        shakeCamera = GetComponent<ShakeCamera>();
         hitThisSwing = new();
     }
 
@@ -29,21 +31,21 @@ public class PlayerSwordHitHandler : MonoBehaviour
 
     void FixedUpdate()
     {
-        DetectHits();
+        if (playerCombat.IsAttacking)
+            DetectHits();
     }
 
-#region Helper functions
     private void DetectHits()
     {
         // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
         // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         // Also fetch the hit data
-        int  direction = playerCombat.GetSwingDirection();
+        // int  direction = playerCombat.GetSwingDirection();
 
         RaycastHit[] hitRays = Physics.BoxCastAll(
             swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
-            raycastTransform.right * direction,
+            raycastTransform.right * 1,
             raycastTransform.rotation,
             maxCastDistance, 
             layerMask);
@@ -72,6 +74,8 @@ public class PlayerSwordHitHandler : MonoBehaviour
         target.HandleTakingDamage(playerCombat.GetWeaponDamage());
         // Enemy react to hit
         target.HandleHitReaction();
+        // Shake camera
+        shakeCamera.PlayBounceShake();
     }
 
     private void MoveVFXToHitPoint(Collider hitCol, ParticleSystem particle)
@@ -90,27 +94,5 @@ public class PlayerSwordHitHandler : MonoBehaviour
         }
 
     }
-#endregion
-
-// For debugging
-// #if UNITY_EDITOR
-//     void OnDrawGizmos()
-//     {
-//         if (!Application.isPlaying) 
-//             return;
-        
-//         // Draw a ray according to hit distance
-//         float castDistance = hitDetect ? rayHit.distance : maxCastDistance;
-//         DrawBoxCast(castDistance, raycastTransform.position, raycastTransform.right, swordCollider.size);
-//     }
-
-//     private void DrawBoxCast(float distance, Vector3 position, Vector3 direction, Vector3 scale)
-//     {
-//         Gizmos.color = Color.red;
-//         //Draw a Ray forward from GameObject toward the hit
-//         Gizmos.DrawRay(position, direction * distance);
-//         //Draw a cube that extends to where the hit exists
-//         Gizmos.DrawWireCube(position + direction * distance, scale);
-//     }
-// #endif
+    
 }

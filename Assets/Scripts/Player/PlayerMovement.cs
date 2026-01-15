@@ -20,17 +20,17 @@ public class PlayerMovement : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody>();
 
-        if (inputHandler.MoveInput.Equals(Vector2.zero)) 
+        if (inputHandler.InputMove.Equals(Vector2.zero)) 
             Debug.LogWarning("Input is zero");
     }
 
     void Update()
     {
         // stop receiving input when attack is performed
-        if (inputHandler.GetPlayerCombat().IsAttacking()) return;
+        if (inputHandler.GetPlayerCombat().IsAttacking) return;
 
         // read input from PlayerInputHandler
-        moveDir = new(inputHandler.MoveInput.x, 0, inputHandler.MoveInput.y);
+        moveDir = new(inputHandler.InputMove.x, 0, inputHandler.InputMove.y);
     }
 
     void FixedUpdate()

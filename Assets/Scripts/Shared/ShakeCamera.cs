@@ -1,7 +1,7 @@
 using UnityEngine;
 using CameraShake;
 
-public class TestCameraShake : MonoBehaviour
+public class ShakeCamera : MonoBehaviour
 {
     [SerializeField] BounceShake.Params bounceShakeParams;
 

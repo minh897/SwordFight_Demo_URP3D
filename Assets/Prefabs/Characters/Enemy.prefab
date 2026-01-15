@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   followTarget: {fileID: 0}
-  followSpeed: 0
+  followSpeed: 0.2
   rotateSpeed: 5
 --- !u!114 &1526531444067943883
 MonoBehaviour:
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   healthSliderUI: {fileID: 6335255355303970597}
-  maxHealth: 500
+  maxHealth: 50
   currentHealth: 0
 --- !u!114 &8809752827283777462
 MonoBehaviour:
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5612737336528347168}
   m_FillRect: {fileID: 724963120126959205}
   m_HandleRect: {fileID: 6597115485518990273}
-  m_Direction: 1
+  m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
@@ -720,6 +720,7 @@ GameObject:
   - component: {fileID: 7880056316074330530}
   - component: {fileID: 5218148096728878290}
   - component: {fileID: 4262209148162511996}
+  - component: {fileID: 5927594847218157151}
   m_Layer: 6
   m_Name: HealthBar
   m_TagString: Untagged
@@ -736,7 +737,7 @@ RectTransform:
   m_GameObject: {fileID: 6613363122580161008}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.05, z: 1}
+  m_LocalScale: {x: 0.24, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8808331795864819286}
@@ -744,7 +745,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2.81}
+  m_AnchoredPosition: {x: 0, y: 2.6}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7880056316074330530
@@ -810,6 +811,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5927594847218157151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613363122580161008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bfe51740399c6899081ff97e0eb069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Billboarding
 --- !u!1 &6628968015561616405
 GameObject:
   m_ObjectHideFlags: 0
