@@ -15906,15 +15906,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0000067949295
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0000016987324
+      value: 4.000002
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16457,7 +16457,7 @@ MonoBehaviour:
   swingAngle: {x: 0, y: 0, z: -180}
   lungeDuration: 0.1
   lungeDistance: 0
-  stretchScale: {x: 0, y: 0, z: 0.6}
+  swordScaleTo: {x: 1, y: 1, z: 2}
 --- !u!1 &6402281735705460206
 GameObject:
   m_ObjectHideFlags: 0
@@ -16510,8 +16510,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1, y: 0.07, z: 0.6}
-  m_Center: {x: 2, y: 0, z: 0}
+  m_Size: {x: 2.48, y: 0.07, z: 0.6}
+  m_Center: {x: 2.2, y: 0, z: 0}
 --- !u!198 &7106983346870152331
 ParticleSystem:
   m_ObjectHideFlags: 0

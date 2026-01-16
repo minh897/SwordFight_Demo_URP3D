@@ -23,7 +23,6 @@ public class PlayerCombat : MonoBehaviour
     private PlayerSwordHitHandler swordHitHandler;
     private PlayerAnimAttack playerAnim;
 
-    private Coroutine attackAnimationCo;
     private int lastSwingDirection = 1; // 1 = right, -1 = left
     private int currentSwingDirection;
 
@@ -72,20 +71,12 @@ public class PlayerCombat : MonoBehaviour
             nextTimeAttack = attackCooldown + Time.time;
 
             // Play attack animation
-            PlayAttackAnimation();
+            playerAnim.PlayAttackAnimation();
             // Play sound effect
             PlaySwordSwingSFX();
             // Play visual effect
             PlaySwordSlashVFX();
         }
-    }
-
-    private void PlayAttackAnimation()
-    {
-        // make sure only one coroutine is running
-        // prevent one coroutine running multiple times
-        if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
-        attackAnimationCo = StartCoroutine(playerAnim.AttackAnimationRoutine());
     }
 
     public void PlaySwordSwingSFX()

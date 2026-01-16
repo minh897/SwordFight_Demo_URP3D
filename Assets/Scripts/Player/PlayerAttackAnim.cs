@@ -9,23 +9,27 @@ public class PlayerAnimAttack : MonoBehaviour
     [SerializeField] private Vector3 swingAngle;
     [SerializeField] private float lungeDuration = 0.2f;
     [SerializeField] private float lungeDistance = 1f;
-    [SerializeField] private Vector3 stretchScale;
+    [SerializeField] private Vector3 swordScaleTo;
 
     // animation settings
     private float currentYAngle;
     private float targetYAngle;
-    private float currentZScale;
-    private float targetZScale;
+
+    private Coroutine attackAnimationCo;
 
     void Start()
     {
         currentYAngle = sword.localEulerAngles.y;
         targetYAngle = currentYAngle + swingAngle.z;
-        currentZScale = sword.localScale.z;
-        targetZScale = currentZScale + stretchScale.z;
     }
 
-    public IEnumerator AttackAnimationRoutine()
+    public void PlayAttackAnimation()
+    {
+        if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
+        attackAnimationCo = StartCoroutine(AttackAnimationRoutine());
+    }
+
+    private IEnumerator AttackAnimationRoutine()
     {
         var swingCo = StartCoroutine(WeaponSwingRoutine(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
@@ -37,6 +41,7 @@ public class PlayerAnimAttack : MonoBehaviour
     {
         float halfDuration = duration * 0.7f; // main swing uses ~70% of total time
         float returnDuration = duration - halfDuration; // remaining time for return
+        
         float startYAngle = currentYAngle;
         float endYAngle = targetYAngle;
 
@@ -86,50 +91,42 @@ public class PlayerAnimAttack : MonoBehaviour
         Vector3 direction = transform.forward * lungeDistance;
         Vector3 endPos = startPos + direction;
 
+        yield return LerpVector3(duration, startPos, endPos, 
+            targetPos => transform.position = targetPos);
+    }
+
+    private IEnumerator ScaleWeaponRoutine(float duration)
+    {
+        float startDuration = duration * 0.7f;
+        float returnDuration = duration - startDuration;
+
+        Vector3 fromScale = sword.localScale;
+        Vector3 toScale = swordScaleTo;
+
+        yield return LerpVector3(startDuration, fromScale, toScale, 
+            targetScale => sword.localScale = targetScale);
+
+        // swap scale target
+        Vector3 tmp = fromScale;
+        fromScale = swordScaleTo;
+        toScale = tmp;
+
+        yield return LerpVector3(returnDuration, fromScale, toScale, 
+            targetScale => sword.localScale = targetScale);
+    }
+
+    private IEnumerator LerpVector3(float duration, Vector3 from, Vector3 to, System.Action<Vector3> apply)
+    {
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            Vector3 towardPosition = Vector3.Lerp(startPos, endPos, t);
-            transform.position = towardPosition;
+            Vector3 lerp = Vector3.Lerp(from, to, t);
+            apply(lerp);
             yield return null;
         }
-
-        transform.position = endPos;
+        apply(to); // making sure the input value reaches its target
     }
 
-    private IEnumerator ScaleWeaponRoutine(float duration)
-    {
-        float halfDuration = duration * 0.7f;
-        float returnDuration = duration - halfDuration;
-
-        float startZScale = currentZScale;
-        float endZScale = targetZScale;
-        Vector3 targetScale = new(1, 1, targetZScale);
-
-        float elapsed = 0f;
-        while (elapsed < halfDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
-            float zScale = Mathf.Lerp(startZScale, endZScale, t);
-            sword.localScale = new(1, 1, zScale);
-            yield return null;
-        }
-        sword.localScale = targetScale;
-
-        float newStartZScale = endZScale;
-        float newTargetZScale = startZScale;
-        
-        elapsed = 0f;
-        while (elapsed < returnDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / returnDuration);
-            float zScale = Mathf.Lerp(newStartZScale, newTargetZScale, t);
-            sword.localScale = new(1, 1, zScale);
-            yield return null;
-        }
-    }
 }
