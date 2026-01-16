@@ -1,14 +1,21 @@
 using System.Collections;
+using Assets.Utility;
 using UnityEngine;
 
 public class PlayerAnimAttack : MonoBehaviour
 {
     [SerializeField] private Transform sword;
     [SerializeField] private float swingDuration = 0.3f;
+
+    [Header("Swing angles")]
+    [SerializeField] private Vector3 swordTargetAngle;
     [SerializeField] private float overshootYAngle = -30f;
-    [SerializeField] private Vector3 swingAngle;
+
+    [Header("Lunge forward")]
     [SerializeField] private float lungeDuration = 0.2f;
     [SerializeField] private float lungeDistance = 1f;
+
+    [Header("Sword scale")]
     [SerializeField] private Vector3 swordScaleTo;
 
     // animation settings
@@ -20,7 +27,7 @@ public class PlayerAnimAttack : MonoBehaviour
     void Start()
     {
         currentYAngle = sword.localEulerAngles.y;
-        targetYAngle = currentYAngle + swingAngle.z;
+        targetYAngle = currentYAngle + swordTargetAngle.z;
     }
 
     public void PlayAttackAnimation()
@@ -39,50 +46,31 @@ public class PlayerAnimAttack : MonoBehaviour
 
     private IEnumerator WeaponSwingRoutine(float duration)
     {
-        float halfDuration = duration * 0.7f; // main swing uses ~70% of total time
-        float returnDuration = duration - halfDuration; // remaining time for return
-        
-        float startYAngle = currentYAngle;
-        float endYAngle = targetYAngle;
+        float startDuration = duration * 0.7f; // main swing uses ~70% of total time
+        float returnDuration = duration - startDuration; // remaining time for return
+
+        Vector3 startAngle = sword.localEulerAngles;
+        Vector3 endAngle = swordTargetAngle;
 
         // since both angles are swapped at the end 
         // start and end angle need to be interpolated
         // startYAngle + endYAngle would yield a different result
-        float offsetYAngle = Mathf.Lerp(startYAngle, endYAngle, 1f) + overshootYAngle;
+        Vector3 offAngle = Vector3.Lerp(startAngle, endAngle, 1f);
+        offAngle.y += overshootYAngle;
 
-        // --- Phase 1: Swing with overshoot ---
-        float elapsed = 0f;
-        while (elapsed < halfDuration)
-        {
-            elapsed += Time.deltaTime;
-            // converts time into a normalized progress value
-            // and then clamp that progress between 0 and 1 
-            // (prevent it to hit 0.2 or 1.1 something like that)
-            float t = Mathf.Clamp01(elapsed / halfDuration);
-            float yRot = Mathf.Lerp(startYAngle, offsetYAngle, t);
-            sword.localRotation = Quaternion.Euler(0, yRot, 0);
-            yield return null;
-        }
+        // swing with overshoot
+        yield return Utils.LerpVector3(startDuration, startAngle, offAngle,
+            target => sword.localEulerAngles = target);
 
-        // --- Phase 2: Return from overshoot to end angle ---
-        elapsed = 0f;
-        while (elapsed < returnDuration)
-        {
-            elapsed += Time.deltaTime;
-            // Ease back from overshoot to final resting angle
-            float t = Mathf.Clamp01(elapsed / returnDuration);
-            float yRot = Mathf.Lerp(offsetYAngle, endYAngle, t);
-            sword.localRotation = Quaternion.Euler(0, yRot, 0);
-            yield return null;
-        }
+        // return from overshoot to end angle
+        yield return Utils.LerpVector3(returnDuration, offAngle, endAngle,
+            target => sword.localEulerAngles = target);
 
-        // make sure the rotation hit the target
-        sword.localRotation = Quaternion.Euler(0, endYAngle, 0);
-        // swap angle for next swing
-        currentYAngle = endYAngle;
-        targetYAngle = startYAngle;
-        // change overshoot angle after each swing
-        overshootYAngle *= -1;
+        // swap target angle
+        swordTargetAngle *= -1f;
+
+        // reverse overshoot y angle
+        overshootYAngle *= -1f;
     }
 
     private IEnumerator LungeForwardRoutine(float duration)
@@ -91,7 +79,7 @@ public class PlayerAnimAttack : MonoBehaviour
         Vector3 direction = transform.forward * lungeDistance;
         Vector3 endPos = startPos + direction;
 
-        yield return LerpVector3(duration, startPos, endPos, 
+        yield return Utils.LerpVector3(duration, startPos, endPos, 
             targetPos => transform.position = targetPos);
     }
 
@@ -103,30 +91,14 @@ public class PlayerAnimAttack : MonoBehaviour
         Vector3 fromScale = sword.localScale;
         Vector3 toScale = swordScaleTo;
 
-        yield return LerpVector3(startDuration, fromScale, toScale, 
+        yield return Utils.LerpVector3(startDuration, fromScale, toScale, 
             targetScale => sword.localScale = targetScale);
 
         // swap scale target
-        Vector3 tmp = fromScale;
-        fromScale = swordScaleTo;
-        toScale = tmp;
+        toScale = Utils.SwapVector3(ref fromScale, ref swordScaleTo);
 
-        yield return LerpVector3(returnDuration, fromScale, toScale, 
+        yield return Utils.LerpVector3(returnDuration, fromScale, toScale, 
             targetScale => sword.localScale = targetScale);
-    }
-
-    private IEnumerator LerpVector3(float duration, Vector3 from, Vector3 to, System.Action<Vector3> apply)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            Vector3 lerp = Vector3.Lerp(from, to, t);
-            apply(lerp);
-            yield return null;
-        }
-        apply(to); // making sure the input value reaches its target
     }
 
 }
