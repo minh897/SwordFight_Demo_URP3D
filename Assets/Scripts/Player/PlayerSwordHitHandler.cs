@@ -42,22 +42,20 @@ public class PlayerSwordHitHandler : MonoBehaviour
         // Also fetch the hit data
         // int  direction = playerCombat.GetSwingDirection();
 
-        RaycastHit[] hitRays = Physics.BoxCastAll(
+        Collider[] hitColliders = Physics.OverlapBox(
             swordCollider.bounds.center,
             raycastTransform.localScale * 0.5f,
-            raycastTransform.right * 1,
             raycastTransform.rotation,
-            maxCastDistance, 
             layerMask);
 
         int i = 0;
         // Check when there is a new collider coming into contact with the box
-        while (i < hitRays.Length)
+        while (i < hitColliders.Length)
         {
             // Debug.Log("BoxCastAll Hit : " + hitRays[i].collider.name);
-            if (hitRays[i].collider.TryGetComponent<EnemyHitDetection>(out var target))
+            if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
             {
-                DeliverHitToTarget(target, hitRays[i].collider);
+                DeliverHitToTarget(target, hitColliders[i]);
             }
             i++;
         }

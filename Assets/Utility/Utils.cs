@@ -6,32 +6,32 @@ namespace Assets.Utility
     public static class Utils
     {
         /// <summary>
-        /// Smoothly interpolates a Vector3 value from a starting point to a target point over a given duration. 
+        /// Smoothly interpolates a value from a starting point to a target point over a given duration. 
         /// The interpolated value is applied each frame via a callback (delegate), and the final target is
         /// guaranteed to be applied when the interpolation completes.
         /// </summary>
         /// <param name="duration"> The time in seconds over which the interpolation occurs </param>
-        /// <param name="start"> The starting Vector3 value </param>
-        /// <param name="end"> The target Vector3 value </param>
-        /// <param name="applyVector3To"> A delegate invoked each frame with the interpolated Vector3 value </param>
+        /// <param name="start"> The starting value </param>
+        /// <param name="end"> The target value </param>
+        /// <param name="applyLerpTo"> A delegate invoked each frame with the interpolated value </param>
         /// <returns> Coroutine </returns>
-        public static IEnumerator LerpVector3(
+        public static IEnumerator LerpOverTime(
             float duration, 
-            Vector3 start, 
-            Vector3 end, 
-            System.Action<Vector3> applyVector3To)
+            float start, 
+            float end, 
+            System.Action<float> applyLerpTo)
         {
             float elapsed = 0f;
             while (elapsed < duration)
             {
-                elapsed += Time.deltaTime;
+                elapsed += Time.fixedDeltaTime;
                 float t = Mathf.Clamp01(elapsed / duration);
-                Vector3 lerp = Vector3.Lerp(start, end, t);
-                applyVector3To(lerp);
+                float newValue = Mathf.Lerp(start, end, t);
+                applyLerpTo(newValue);
                 yield return null;
             }
             // making sure the interpolated value reaches its target
-            applyVector3To(end); 
+            applyLerpTo(end); 
         }
 
         public static Vector3 SwapVector3(ref Vector3 from, ref Vector3 to)
