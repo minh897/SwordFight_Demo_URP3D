@@ -5,31 +5,33 @@ using UnityEngine;
 public class PlayerAnimAttack : MonoBehaviour
 {
     [SerializeField] private Transform sword;
-    [SerializeField] private float swingDuration = 0.3f;
 
-    [Header("Swing angles")]
-    [SerializeField] private Vector3 swordTargetAngle;
-    [SerializeField] private float overshootYAngle = -30f;
-    [SerializeField] private Transform swingRot_1;
-    [SerializeField] private Transform swingRot_2;
+    [Header("Sword swing")]
+    [SerializeField] private Transform swingPos_R;
+    [SerializeField] private Transform swingPos_L;
+    [SerializeField] private float swingDuration;
+    [SerializeField] private float overshootYAngle;
+    private float startYAngle;
+    private float endYAngle;
+    private float targetYAngle;
+    private float rotateDir;
 
     [Header("Lunge forward")]
-    [SerializeField] private float lungeDuration = 0.2f;
-    [SerializeField] private float lungeDistance = 1f;
+    [SerializeField] private float lungeDuration;
+    [SerializeField] private float lungeDistance;
 
     [Header("Sword scale")]
     [SerializeField] private Vector3 swordScaleTo;
-
-    // animation settings
-    // private float currentYAngle;
-    // private float targetYAngle;
+    [SerializeField] private float scaleDuration;
 
     private Coroutine attackAnimationCo;
 
     void Start()
     {
-        // currentYAngle = sword.localEulerAngles.y;
-        // targetYAngle = currentYAngle + swordTargetAngle.y;
+        rotateDir = -1;
+        startYAngle = swingPos_R.localEulerAngles.y;
+        endYAngle = swingPos_L.localEulerAngles.y;
+        targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 
     public void PlayAttackAnimation()
@@ -42,7 +44,7 @@ public class PlayerAnimAttack : MonoBehaviour
     {
         var swingCo = StartCoroutine(HorizontalSwingCo(swingDuration));
         // StartCoroutine(LungeForwardRoutine(lungeDuration));
-        // StartCoroutine(ScaleWeaponRoutine(swingDuration));
+        // StartCoroutine(ScaleWeaponRoutine(scaleDuration));
         yield return swingCo;
     }
 
@@ -51,34 +53,38 @@ public class PlayerAnimAttack : MonoBehaviour
         float startDuration = duration * 0.7f; // main swing uses ~70% of total time
         float returnDuration = duration - startDuration; // remaining time for return
 
-        float startYAngle = sword.localEulerAngles.y;
-        float endYAngle = swordTargetAngle.y;
+        float fromYAngle = sword.localEulerAngles.y;
+        float toYAngle = targetYAngle * rotateDir;
 
         // since both angles are swapped at the end 
-        // start and end angle need to be interpolated
-        // startYAngle + endYAngle would yield a different result
-        float offYAngle = Mathf.Lerp(startYAngle, endYAngle, 1f) + overshootYAngle;
+        // the offYAngle value need to be interpolated
+        // fromYAngle + toYAngle would yield a different result
+        float offYAngle = Mathf.Lerp(fromYAngle, toYAngle, 1f) + overshootYAngle * rotateDir;
 
         // swing with overshoot
-        yield return Utils.LerpOverTime(startDuration, startYAngle, offYAngle,
-            targetYAngle =>
+        yield return Utils.LerpOverTime(startDuration, fromYAngle, offYAngle,
+            newAngle =>
             {
-                Vector3 newEulerAngles = new(0f, targetYAngle, 0f);
+                Vector3 newEulerAngles = new(0f, newAngle, 0f);
                 Quaternion newRotation = Quaternion.Euler(newEulerAngles);
-                sword.rotation = newRotation;
+                sword.localRotation = newRotation;
             });
 
         // return from overshoot to end angle
-        yield return Utils.LerpOverTime(returnDuration, offYAngle, endYAngle,
-            targetYAngle =>
+        yield return Utils.LerpOverTime(startDuration, offYAngle, toYAngle,
+            newAngle =>
             {
-                Vector3 newEulerAngles = new(0f, targetYAngle, 0f);
+                Vector3 newEulerAngles = new(0f, newAngle, 0f);
                 Quaternion newRotation = Quaternion.Euler(newEulerAngles);
-                sword.rotation = newRotation;
+                sword.localRotation = newRotation;
             });
 
-        // swap target angle
-        // reverse overshoot y angle
+        // reverse swing direction
+        rotateDir *= -1;
+        // swap angle value using tuple
+        (endYAngle, startYAngle) = (startYAngle, endYAngle);
+        // calculate new target angle
+        targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 
     // private IEnumerator LungeForwardRoutine(float duration)
