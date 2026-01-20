@@ -12,14 +12,18 @@ public class PlayerSwordHitHandler : MonoBehaviour
     [SerializeField] private BoxCollider swordCollider;
     [SerializeField] private Rigidbody swordRigidbody;
 
+    private ShakeCamera shakeCamera;
+    
     // Only contains unique element
     private HashSet<EnemyHitDetection> hitThisSwing;
-    private PlayerCombat playerCombat;
-    private ShakeCamera shakeCamera;
+
+    private float weaponDamage;
+
+    public void SendDamage(float damage) => weaponDamage = damage;
 
     void Awake()
     {
-        playerCombat = GetComponent<PlayerCombat>();
+        // playerCombat = GetComponent<PlayerCombat>();
         shakeCamera = GetComponent<ShakeCamera>();
         hitThisSwing = new();
     }
@@ -31,8 +35,7 @@ public class PlayerSwordHitHandler : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (playerCombat.IsAttacking)
-            DetectHits();
+        DetectHits();
     }
 
     private void DetectHits()
@@ -68,8 +71,7 @@ public class PlayerSwordHitHandler : MonoBehaviour
             return;
 
         // Enemy take damage
-        float damage = playerCombat.GetWeaponDamage();
-        target.HandleTakingDamage(damage);
+        target.HandleTakingDamage(weaponDamage);
         // Enemy react to hit
         target.HandleHitReaction(collider, raycastTransform.position);
         // Shake camera

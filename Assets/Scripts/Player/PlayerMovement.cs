@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInputHandler))]
@@ -8,17 +7,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float rotateSpeed = 5.0f;
 
-    private PlayerInputHandler inputHandler;
     private Rigidbody rb;
+    private PlayerInputHandler inputHandler;
 
     private Vector3 moveDir;
     private Vector3 currentDir;
     private Vector3 lastDir;
-    
+
+    private bool moveInterrupted;
+
     void Start()
     {
-        inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody>();
+        inputHandler = GetComponent<PlayerInputHandler>();
 
         if (inputHandler.InputMove.Equals(Vector2.zero)) 
             Debug.LogWarning("Input is zero");
@@ -26,15 +27,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // stop receiving input when attack is performed
-        if (inputHandler.GetPlayerCombat().IsAttacking) return;
-
-        // read input from PlayerInputHandler
-        moveDir = new(inputHandler.InputMove.x, 0, inputHandler.InputMove.y);
+        HandleMoveInterruption();
     }
 
     void FixedUpdate()
     {
+        // read input from PlayerInputHandler
+        moveDir = new(inputHandler.InputMove.x, 0, inputHandler.InputMove.y);
+
+        // stop movement when attack is performed
+        if (moveInterrupted) return;
+
         // move the player to target position
         Vector3 targetPosition = rb.position + moveSpeed * Time.fixedDeltaTime * moveDir;
         rb.MovePosition(targetPosition);
@@ -50,5 +53,10 @@ public class PlayerMovement : MonoBehaviour
         // smoothly interpolate player rotation toward moving direction
         Quaternion newRotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         rb.MoveRotation(newRotation);
+    }
+
+    private void HandleMoveInterruption()
+    {
+        moveInterrupted = inputHandler.GetPlayerCombat().IsAttacking;
     }
 }

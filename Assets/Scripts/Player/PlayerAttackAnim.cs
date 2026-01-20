@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class PlayerAnimAttack : MonoBehaviour
 {
-    [SerializeField] private Transform sword;
+    public event System.Action OnStarted;
+    public event System.Action OnFinished;
+
+    [Header("Weapon")]
+    [SerializeField] private Transform weaponTransform;
 
     [Header("Sword swing")]
     [SerializeField] private Transform swingPos_R;
@@ -21,7 +25,7 @@ public class PlayerAnimAttack : MonoBehaviour
     [SerializeField] private float lungeDistance;
 
     [Header("Sword scale")]
-    [SerializeField] private Vector3 swordScaleTo;
+    [SerializeField] private Vector3 targetScale;
     [SerializeField] private float scaleDuration;
 
     private Coroutine attackAnimationCo;
@@ -34,18 +38,22 @@ public class PlayerAnimAttack : MonoBehaviour
         targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 
-    public void PlayAttackAnimation()
+    public void PlayAttackAnim()
     {
         if (attackAnimationCo != null) StopCoroutine(attackAnimationCo);
-        attackAnimationCo = StartCoroutine(AttackAnimationRoutine());
+        attackAnimationCo = StartCoroutine(AttackCo());
     }
 
-    private IEnumerator AttackAnimationRoutine()
+    private IEnumerator AttackCo()
     {
+        OnStarted?.Invoke();
+
         var swingCo = StartCoroutine(HorizontalSwingCo(swingDuration));
-        // StartCoroutine(LungeForwardRoutine(lungeDuration));
-        // StartCoroutine(ScaleWeaponRoutine(scaleDuration));
+        StartCoroutine(LungeForwardRoutine(lungeDuration));
+        StartCoroutine(ScaleWeaponRoutine(scaleDuration));
         yield return swingCo;
+
+        OnFinished?.Invoke();
     }
 
     private IEnumerator HorizontalSwingCo(float duration)
@@ -53,7 +61,7 @@ public class PlayerAnimAttack : MonoBehaviour
         float startDuration = duration * 0.7f; // main swing uses ~70% of total time
         float returnDuration = duration - startDuration; // remaining time for return
 
-        float fromYAngle = sword.localEulerAngles.y;
+        float fromYAngle = weaponTransform.localEulerAngles.y;
         float toYAngle = targetYAngle * rotateDir;
 
         // since both angles are swapped at the end 
@@ -67,7 +75,7 @@ public class PlayerAnimAttack : MonoBehaviour
             {
                 Vector3 newEulerAngles = new(0f, newAngle, 0f);
                 Quaternion newRotation = Quaternion.Euler(newEulerAngles);
-                sword.localRotation = newRotation;
+                weaponTransform.localRotation = newRotation;
             });
 
         // return from overshoot to end angle
@@ -76,7 +84,7 @@ public class PlayerAnimAttack : MonoBehaviour
             {
                 Vector3 newEulerAngles = new(0f, newAngle, 0f);
                 Quaternion newRotation = Quaternion.Euler(newEulerAngles);
-                sword.localRotation = newRotation;
+                weaponTransform.localRotation = newRotation;
             });
 
         // reverse swing direction
@@ -87,32 +95,54 @@ public class PlayerAnimAttack : MonoBehaviour
         targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 
-    // private IEnumerator LungeForwardRoutine(float duration)
-    // {
-    //     Vector3 startPos = transform.position;
-    //     Vector3 direction = transform.forward * lungeDistance;
-    //     Vector3 endPos = startPos + direction;
+    private IEnumerator LungeForwardRoutine(float duration)
+    {
+        Vector3 startPos = transform.position;
+        Vector3 forward = transform.forward;
 
-    //     yield return Utils.LerpOverTime(duration, startPos, endPos, 
-    //         targetPos => transform.position = targetPos);
-    // }
+        float fromDist = 0f;
+        float toDist = lungeDistance;
 
-    // private IEnumerator ScaleWeaponRoutine(float duration)
-    // {
-    //     float startDuration = duration * 0.7f;
-    //     float returnDuration = duration - startDuration;
+        yield return Utils.LerpOverTime(duration, fromDist, toDist, 
+            currentDist =>
+            {
+                float eased = currentDist * currentDist; // ease-in the lunge distance
+                Vector3 newPos = startPos + eased * lungeDistance * forward;
+                transform.position = newPos;
+            });
 
-    //     Vector3 fromScale = sword.localScale;
-    //     Vector3 toScale = swordScaleTo;
+    }
 
-    //     yield return Utils.LerpOverTime(startDuration, fromScale, toScale, 
-    //         targetScale => sword.localScale = targetScale);
+    private IEnumerator ScaleWeaponRoutine(float duration)
+    {
+        float startDuration = duration * 0.7f;
+        float returnDuration = duration - startDuration;
 
-    //     // swap scale target
-    //     toScale = Utils.SwapVector3(ref fromScale, ref swordScaleTo);
+        float fromScale = weaponTransform.localScale.z;
+        float toScale = targetScale.z;
 
-    //     yield return Utils.LerpOverTime(returnDuration, fromScale, toScale, 
-    //         targetScale => sword.localScale = targetScale);
-    // }
+        yield return Utils.LerpOverTime(startDuration, fromScale, toScale, 
+            newValue =>
+            {
+                Vector3 newScale = new(
+                    weaponTransform.localScale.x, 
+                    weaponTransform.localScale.y, 
+                    newValue);
+                weaponTransform.localScale = newScale;
+            });
+
+        // swap scale target
+        (fromScale, toScale) = (toScale, fromScale);
+
+        yield return Utils.LerpOverTime(returnDuration, fromScale, toScale, 
+            newValue =>
+            {
+                Vector3 newScale = new(
+                    weaponTransform.localScale.x, 
+                    weaponTransform.localScale.y, 
+                    newValue);
+                weaponTransform.localScale = newScale;
+            });
+    }
 
 }

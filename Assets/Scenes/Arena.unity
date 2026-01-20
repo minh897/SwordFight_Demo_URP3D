@@ -449,7 +449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1438364394
 Transform:
   m_ObjectHideFlags: 0
@@ -739,7 +739,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1834049133
 Transform:
   m_ObjectHideFlags: 0
@@ -1073,7 +1073,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6373228110741015067}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 853d9715c663badf7b4f1165b2aeef52, type: 3}
   m_Name: 
@@ -6031,7 +6031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e1ffd85a9cac491a6866139f0fb219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  swordDamage: 10
+  damage: 10
   attackCooldown: 0.3
   vfxSwordSlash: {fileID: 1238329284304245502}
   sfxSwordSwing: {fileID: 8300000, guid: 97b1d7b2cbd54b587bfbb5726bc34daf, type: 3}
@@ -6178,10 +6178,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!198 &2997904184730463831
 ParticleSystem:
@@ -16037,11 +16037,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 724963120126959205, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 724963120126959205, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1526531444067943883, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: pushBackDistance
@@ -16053,11 +16053,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1785916658318261389, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4325979857711780762, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_UseGravity
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4325979857711780762, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_Constraints
-      value: 4
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4325979857711780762, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6597115485518990273, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_AnchorMax.x
@@ -16077,7 +16085,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6737465868347739629, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: followSpeed
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6737465868347739629, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: followTarget
@@ -16093,11 +16101,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000067949295
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.000002
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16637,13 +16645,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10390b2ac73ee333aebd9b77823cd75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  sword: {fileID: 1161985619276612665}
-  swingDuration: 1
+  weaponTransform: {fileID: 1161985619276612665}
   swingPos_R: {fileID: 1438364394}
   swingPos_L: {fileID: 1834049133}
+  swingDuration: 0.1
+  overshootYAngle: 30
   lungeDuration: 0.1
-  lungeDistance: 0
-  swordScaleTo: {x: 2, y: 1, z: 1}
+  lungeDistance: 1
+  targetScale: {x: 0, y: 0, z: 1.5}
+  scaleDuration: 0.1
 --- !u!1 &6402281735705460206
 GameObject:
   m_ObjectHideFlags: 0
@@ -16705,7 +16715,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3945108372866973572}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9a54dd589d89043da5046252281529d, type: 3}
   m_Name: 
@@ -21612,7 +21622,7 @@ Transform:
   m_GameObject: {fileID: 8012340819377877934}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0.8}
+  m_LocalPosition: {x: 0.8, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []

@@ -1,17 +1,16 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
-    [Header("Weapon")]
-    [SerializeField] private float swordDamage = 10;
+    [Header("Attack data")]
+    [SerializeField] private float damage = 10;
     [SerializeField] private float attackCooldown = 0.5f;
 
-    [Header("Particle System")]
+    [Header("Visual effects")]
     [SerializeField] private ParticleSystem vfxSwordSlash;
 
-    [Header("Audio")]
+    [Header("Audio data")]
     [SerializeField] private AudioClip sfxSwordSwing;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
@@ -21,7 +20,7 @@ public class PlayerCombat : MonoBehaviour
     private AudioSource sfxSource;
     private PlayerInputHandler inputHandler;
     private PlayerSwordHitHandler swordHitHandler;
-    private PlayerAnimAttack playerAnim;
+    private PlayerAnimAttack attackAnim;
 
     private int lastSwingDirection = 1; // 1 = right, -1 = left
     private int currentSwingDirection;
@@ -31,29 +30,28 @@ public class PlayerCombat : MonoBehaviour
     private float nextTimeAttack = 0f;
 
     public bool IsAttacking {get; private set; }
-
-    public float GetWeaponDamage() => swordDamage;
+    public event System.Action OnAttacking;
 
     void Awake()
     {
         sfxSource = GetComponent<AudioSource>();
         inputHandler = GetComponent<PlayerInputHandler>();
         swordHitHandler = GetComponent<PlayerSwordHitHandler>();
-        playerAnim = GetComponent<PlayerAnimAttack>();
+        attackAnim = GetComponent<PlayerAnimAttack>();
 
         currentSwingDirection = lastSwingDirection;
     }
 
-    void Update()
+    void OnEnable()
     {
-        // reset attacking state when cooldown is up
-        if (IsAttacking && attackTimer >= nextTimeAttack)
-        {
-            // flip swing direction
-            currentSwingDirection *= -1;
-            IsAttacking = false;
-            swordHitHandler.enabled = false;
-        }
+        attackAnim.OnStarted += HandleAttackStarted;
+        attackAnim.OnFinished += HandleAttackFinished;
+    }
+
+    void OnDisable()
+    {
+        attackAnim.OnStarted -= HandleAttackStarted;
+        attackAnim.OnFinished -= HandleAttackFinished;
     }
 
     void FixedUpdate()
@@ -66,12 +64,11 @@ public class PlayerCombat : MonoBehaviour
         // perform an attack
         if (inputHandler.InputAttack && attackTimer > nextTimeAttack)
         {
-            IsAttacking = true;
-            swordHitHandler.enabled = true;
+            OnAttacking?.Invoke();
             nextTimeAttack = attackCooldown + Time.time;
 
             // Play attack animation
-            playerAnim.PlayAttackAnimation();
+            attackAnim.PlayAttackAnim();
             // Play sound effect
             PlaySwordSwingSFX();
             // Play visual effect
@@ -79,12 +76,26 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    public void PlaySwordSwingSFX()
+    private void HandleAttackStarted()
+    {
+        IsAttacking = true;
+        swordHitHandler.enabled = true;
+        swordHitHandler.SendDamage(damage);
+    }
+
+    private void HandleAttackFinished()
+    {
+        IsAttacking = false;
+        swordHitHandler.enabled = false;
+        currentSwingDirection *= -1;
+    }
+
+    private void PlaySwordSwingSFX()
     {
         AudioManager.Instance.PlaySFX(sfxSwordSwing, sfxSource, volume, minPitch, maxPitch);
     }
 
-    public void PlaySwordSlashVFX()
+    private void PlaySwordSlashVFX()
     {
         vfxSwordSlash.Play();
 

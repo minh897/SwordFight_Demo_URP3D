@@ -2,7 +2,7 @@ using System.Collections;
 using Assets.Utility;
 using UnityEngine;
 
-public class Spin : MonoBehaviour
+public class SpinTest : MonoBehaviour
 {
     public Transform rot1;
     public Transform rot2;

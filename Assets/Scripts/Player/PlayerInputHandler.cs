@@ -10,8 +10,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     private PlayerInput playerInput;
     private PlayerCombat playerCombat;
 
-    private InputAction actionMovement;
-
     void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -22,7 +20,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     {
         InputSystem.actions.Disable();
         playerInput.currentActionMap?.Enable();
-        actionMovement = playerInput.currentActionMap.FindAction("Move");
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -34,8 +31,6 @@ public class PlayerInputHandler : MonoBehaviour, InputSystem_Actions.IPlayerActi
     {
         InputAttack = context.ReadValueAsButton();
     }
-
-    public InputAction GetMoveAction() => actionMovement;
 
     public PlayerCombat GetPlayerCombat() => playerCombat;
 }
