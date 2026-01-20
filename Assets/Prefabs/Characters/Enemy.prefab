@@ -166,7 +166,6 @@ GameObject:
   - component: {fileID: 1526531444067943883}
   - component: {fileID: 4398909512442246609}
   - component: {fileID: 7294141662143326190}
-  - component: {fileID: 8809752827283777462}
   - component: {fileID: 333214496077300616}
   m_Layer: 6
   m_Name: Enemy
@@ -368,18 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b855a15404022e5e84d38849a8e6756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitDetection
-  vfxImpact: {fileID: 677137954078002547}
-  vfxExplosion: {fileID: 8130493611254400795}
-  stunDuration: 0.6
-  pushDuration: 0.1
-  leanDuration: 0.2
-  pushBackDistance: 0
-  leanAngle: {x: -45, y: 0, z: 0}
-  sfxSwordHit: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
-  sfxDeath: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
-  minPitch: 1
-  maxPitch: 1.2
-  volume: 0.415
 --- !u!114 &4398909512442246609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,61 +397,6 @@ MonoBehaviour:
   healthSliderUI: {fileID: 6335255355303970597}
   maxHealth: 50
   currentHealth: 0
---- !u!114 &8809752827283777462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f11fcfa372c760c185fa900599cde0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SquashAndStretch
-  transformToAffect: {fileID: 7847448758086520596}
-  axisToAffect: 6
-  animationDuration: 0.25
-  canBeOverwritten: 1
-  playOnStart: 0
-  playsEveryTime: 1
-  initialScale: 1
-  maximumScale: 1.5
-  resetToInitialScaleAfterAnimation: 1
-  reverseAnimationCurveAfterPlaying: 0
-  squashAndStretchCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.5031433
-      value: 1.0025511
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &333214496077300616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1159,11 +1091,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7387384214334710820, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
   m_PrefabInstance: {fileID: 4901618208880335233}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &8130493611254400795 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 3806486261171019418, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
-  m_PrefabInstance: {fileID: 4901618208880335233}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6530513297942983738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1229,11 +1156,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
---- !u!198 &677137954078002547 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6036132328543762761, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
-  m_PrefabInstance: {fileID: 6530513297942983738}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3821214871168878381 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}

@@ -8,40 +8,41 @@ public class EnemyFollow : MonoBehaviour
     [SerializeField] private float followSpeed;
     [SerializeField] private float rotateSpeed;
 
-    private Rigidbody _rb;
+    private Rigidbody rb;
     private EnemyHitDetection hitDetection;
-    private Vector3 direction;
+    private Vector3 lookDirection;
 
     void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         hitDetection = GetComponent<EnemyHitDetection>();
 
-        if (followTarget == null)
-            followTarget = FindFirstObjectByType<PlayerInputHandler>().gameObject.transform;
-    }
-
-    void Update()
-    {
-        // continously updating direction
-        direction = followTarget.position - _rb.position;
+        if (followTarget.Equals(null))
+            Debug.Log("Please assign a follow target for this script");
     }
 
     void FixedUpdate()
     {
+        if (followTarget.Equals(null)) return;
+
         // if enemy is stunned then stop all movement
         if (hitDetection.GetHit) return;
 
-        // enemy can only rotate smoothly along the horizontal axis
-        // give it a more natural feel than just move to target rotation immediately
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        float t = Mathf.Clamp01(Time.fixedDeltaTime * rotateSpeed);
-        float yRot = Mathf.LerpAngle(transform.localEulerAngles.y, targetRotation.eulerAngles.y, t);
-        Quaternion newRotation = Quaternion.Euler(0, yRot, 0);
+        // continously updating direction
+        lookDirection = followTarget.position - transform.position;
+        rb.MovePosition(rb.position + followSpeed * Time.fixedDeltaTime * lookDirection);
 
-        _rb.MovePosition(_rb.position + followSpeed * Time.fixedDeltaTime * direction);
-        _rb.MoveRotation(newRotation);
+        // rotate the rigidbody toward the target's direction
+        // restrict the direction to horizontal plane only before creating a new rotation
+        // check for magnitude to avoid error if the direction Vector3 is zero
+        Vector3 flatDirection = lookDirection;
+        flatDirection.y = 0f;
+        if (flatDirection.sqrMagnitude > 0.0001f)
+        {
+            Quaternion newRotation = Quaternion.LookRotation(flatDirection);
+            transform.rotation = newRotation;
+        }
     }
 
-    public Vector3 GetMovingDirection() => direction;
+    public Vector3 GetMovingDirection() => lookDirection;
 }
