@@ -32,7 +32,7 @@ public class EnemyFollow : MonoBehaviour
         lookDirection = followTarget.position - transform.position;
         rb.MovePosition(rb.position + followSpeed * Time.fixedDeltaTime * lookDirection);
 
-        // rotate the rigidbody toward the target's direction
+        // rotate the transform toward the target's direction
         // restrict the direction to horizontal plane only before creating a new rotation
         // check for magnitude to avoid error if the direction Vector3 is zero
         Vector3 flatDirection = lookDirection;

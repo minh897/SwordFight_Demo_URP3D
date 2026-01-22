@@ -19,7 +19,7 @@ public class PlayerCombat : MonoBehaviour
     // components
     private AudioSource sfxSource;
     private PlayerInputHandler inputHandler;
-    private PlayerSwordHitHandler swordHitHandler;
+    private PlayerWeaponHitHandler weaponHitHandler;
     private PlayerAnimAttack attackAnim;
 
     private int lastSwingDirection = 1; // 1 = right, -1 = left
@@ -36,7 +36,7 @@ public class PlayerCombat : MonoBehaviour
     {
         sfxSource = GetComponent<AudioSource>();
         inputHandler = GetComponent<PlayerInputHandler>();
-        swordHitHandler = GetComponent<PlayerSwordHitHandler>();
+        weaponHitHandler = GetComponent<PlayerWeaponHitHandler>();
         attackAnim = GetComponent<PlayerAnimAttack>();
 
         currentSwingDirection = lastSwingDirection;
@@ -79,14 +79,14 @@ public class PlayerCombat : MonoBehaviour
     private void HandleAttackStarted()
     {
         IsAttacking = true;
-        swordHitHandler.enabled = true;
-        swordHitHandler.SendDamage(damage);
+        weaponHitHandler.enabled = true;
+        weaponHitHandler.SendDamage(damage);
     }
 
     private void HandleAttackFinished()
     {
         IsAttacking = false;
-        swordHitHandler.enabled = false;
+        weaponHitHandler.enabled = false;
         currentSwingDirection *= -1;
     }
 
@@ -98,11 +98,10 @@ public class PlayerCombat : MonoBehaviour
     private void PlaySwordSlashVFX()
     {
         vfxSwordSlash.Play();
-
-        // if swing angle has changed
+        
+        // flip the vfx rotation in order to be in sync with the swing direction
         if (currentSwingDirection != lastSwingDirection)
         {
-            // flip the swordslash direction
             vfxSwordSlash.transform.localRotation =
                 currentSwingDirection == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
             lastSwingDirection = currentSwingDirection;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSwordHitHandler : MonoBehaviour
+public class PlayerWeaponHitHandler : MonoBehaviour
 {
     [Header("Raycasting")]
     [SerializeField] private float maxCastDistance;
