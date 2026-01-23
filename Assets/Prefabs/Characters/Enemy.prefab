@@ -165,6 +165,9 @@ GameObject:
   - component: {fileID: 6737465868347739629}
   - component: {fileID: 1526531444067943883}
   - component: {fileID: 4398909512442246609}
+  - component: {fileID: 4594284875498290021}
+  - component: {fileID: 4170021489640463219}
+  - component: {fileID: 6179314611529892200}
   - component: {fileID: 7294141662143326190}
   - component: {fileID: 333214496077300616}
   m_Layer: 6
@@ -215,10 +218,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &3775981664373378516
 CapsuleCollider:
@@ -353,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   followTarget: {fileID: 0}
-  followSpeed: 0.2
+  followSpeed: 0
   rotateSpeed: 5
 --- !u!114 &1526531444067943883
 MonoBehaviour:
@@ -382,6 +385,54 @@ MonoBehaviour:
   hitColor: {r: 0.7529412, g: 0.20392157, b: 0.20392157, a: 1}
   flashIntensity: 15
   fadeDuration: 0.1
+--- !u!114 &4594284875498290021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e6bd67cf5ea711caad627cd9d193cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  stunDuration: 0.3
+  pushDuration: 0.1
+  pushDistance: 0.5
+  leanDuration: 0.2
+  leanAngle: {x: -30, y: 0, z: 0}
+--- !u!114 &4170021489640463219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe37b6213f8adcf9b25e3820b5b75bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  vfxImpact: {fileID: 677137954078002547}
+  vfxExplosion: {fileID: 8130493611254400795}
+--- !u!114 &6179314611529892200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11e77fb9e16f2360f8c1c79e0a071612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  sfxSwordHit: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
+  sfxDeath: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
+  minPitch: 0.85
+  maxPitch: 1
+  volume: 0.633
 --- !u!114 &7294141662143326190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   healthSliderUI: {fileID: 6335255355303970597}
-  maxHealth: 50
+  maxHealth: 500
   currentHealth: 0
 --- !u!114 &333214496077300616
 MonoBehaviour:
@@ -1035,7 +1086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4139076721695962061, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
       propertyPath: m_Name
-      value: EnemyExplosionVFX
+      value: VFX_CircleExplosion
       objectReference: {fileID: 0}
     - target: {fileID: 4139076721695962061, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
       propertyPath: m_IsActive
@@ -1091,6 +1142,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7387384214334710820, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
   m_PrefabInstance: {fileID: 4901618208880335233}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &8130493611254400795 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3806486261171019418, guid: bbef85583363c32e68df4b286aa2d18f, type: 3}
+  m_PrefabInstance: {fileID: 4901618208880335233}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6530513297942983738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1101,7 +1157,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1465538838009181258, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
       propertyPath: m_Name
-      value: EnemyImpactVFX
+      value: VFX_HitSpark
       objectReference: {fileID: 0}
     - target: {fileID: 1465538838009181258, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
       propertyPath: m_IsActive
@@ -1151,11 +1207,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+--- !u!198 &677137954078002547 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6036132328543762761, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}
+  m_PrefabInstance: {fileID: 6530513297942983738}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3821214871168878381 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8045299837046698775, guid: cd1b5f6414d6d741998099bfceb302a0, type: 3}

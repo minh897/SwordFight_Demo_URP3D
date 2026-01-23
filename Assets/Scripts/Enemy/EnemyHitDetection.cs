@@ -25,16 +25,11 @@ public class EnemyHitDetection : MonoBehaviour
     public void HandleHitReaction(Collider collider, Vector3 position)
     {
         // Move impact visual effect to hit position
-        var particle = visualEffect.VFXSwordHit();
-        visualEffect.MoveVFXToColliderPos(particle, collider, position);
-        // Play impact visual effect
-        visualEffect.PlayImpactVFX();
-        // Play damage flash
-        damageFlash.FlashColor();
-        // Play sword hit sound effect
-        soundEffect.PlaySwordHitSFX();
-        // Play stun animation
-        impactAnim.PlayImpactAnim();
+        // visualEffect.MoveVFXToColliderPos(visualEffect.VFXSwordHit(), collider, position);
+        // visualEffect.PlayImpactVFX();
+        // damageFlash.FlashColor();
+        // soundEffect.PlaySwordHitSFX();
+        // impactAnim.PlayImpactAnim();
     }
 
     public void HandleTakingDamage(float damage)
@@ -44,13 +39,9 @@ public class EnemyHitDetection : MonoBehaviour
         // handle enemy dead state
         if (myHealth.IsDead)
         {
-            // turn the enemy transparent to simulate death
+            // visualEffect.PlayExplosionVFX();
+            // soundEffect.PlayDeathSFX();
             makeTransparent.SetMatToTransparent(damageFlash.Renderers);
-            // play enemy explosion vfx
-            visualEffect.PlayExplosionVFX();
-            // play enemy death sound
-            soundEffect.PlayDeathSFX();
-            // disable the enemy GameObject after half a second
             Invoke(nameof(DisableEnemyAfter), .5f);
         }
     }

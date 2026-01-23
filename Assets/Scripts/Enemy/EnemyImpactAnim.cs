@@ -34,13 +34,10 @@ public class EnemyImpactAnim : MonoBehaviour
     private IEnumerator PushBackRoutine(float duration)
     {
         float elapsed = 0f;
-        // get enemy direction
+        
         Vector3 direction = gameObject.GetComponent<EnemyFollow>().GetMovingDirection();
-        // flip the current direction to get the opposite direction
         Vector3 oppositeDir = -1 * direction;
-        // get enemy current position
         Vector3 startPos = transform.position;
-        // calculate the target position
         Vector3 endPos = startPos + oppositeDir * pushDistance;
 
         // interpolate between current position and target position

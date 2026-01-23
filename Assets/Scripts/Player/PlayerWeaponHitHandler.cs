@@ -3,16 +3,17 @@ using UnityEngine;
 
 public class PlayerWeaponHitHandler : MonoBehaviour
 {
+    public event System.Action OnHitFrame;
+    public event System.Action OnHitReaction;
+
     [Header("Raycasting")]
     [SerializeField] private float maxCastDistance;
     [SerializeField] private Transform raycastTransform;
     [SerializeField] private LayerMask layerMask;
 
     [Header("Physics")]
-    [SerializeField] private BoxCollider swordCollider;
-    [SerializeField] private Rigidbody swordRigidbody;
-
-    private ShakeCamera shakeCamera;
+    [SerializeField] private BoxCollider weaponCol;
+    [SerializeField] private Rigidbody weaponRb;
     
     // Only contains unique element
     private HashSet<EnemyHitDetection> hitThisSwing;
@@ -23,8 +24,6 @@ public class PlayerWeaponHitHandler : MonoBehaviour
 
     void Awake()
     {
-        // playerCombat = GetComponent<PlayerCombat>();
-        shakeCamera = GetComponent<ShakeCamera>();
         hitThisSwing = new();
     }
 
@@ -40,13 +39,8 @@ public class PlayerWeaponHitHandler : MonoBehaviour
 
     private void DetectHits()
     {
-        // Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), 
-        // half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
-        // Also fetch the hit data
-        // int  direction = playerCombat.GetSwingDirection();
-
         Collider[] hitColliders = Physics.OverlapBox(
-            swordCollider.bounds.center,
+            weaponCol.bounds.center,
             raycastTransform.localScale * 0.5f,
             raycastTransform.rotation,
             layerMask);
@@ -55,7 +49,6 @@ public class PlayerWeaponHitHandler : MonoBehaviour
         // Check when there is a new collider coming into contact with the box
         while (i < hitColliders.Length)
         {
-            // Debug.Log("BoxCastAll Hit : " + hitRays[i].collider.name);
             if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
             {
                 DeliverHitToTarget(target, hitColliders[i]);
@@ -66,16 +59,13 @@ public class PlayerWeaponHitHandler : MonoBehaviour
 
     private void DeliverHitToTarget(EnemyHitDetection target, Collider collider)
     {
-        // Return if HashSet cannot be added because of duplicated target
+        // Gameplay rule: a single swing cannot damage the same target twice
         if (!hitThisSwing.Add(target))
             return;
 
-        // Enemy take damage
+        OnHitFrame?.Invoke();
+        OnHitReaction?.Invoke();
         target.HandleTakingDamage(weaponDamage);
-        // Enemy react to hit
-        target.HandleHitReaction(collider, raycastTransform.position);
-        // Shake camera
-        shakeCamera.PlayBounceShake();
     }
    
 }

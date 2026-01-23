@@ -2,10 +2,10 @@ using System.Collections;
 using Assets.Utility;
 using UnityEngine;
 
-public class PlayerAnimAttack : MonoBehaviour
+public class PlayerAttackAnim : MonoBehaviour
 {
-    public event System.Action OnStarted;
-    public event System.Action OnFinished;
+    public event System.Action OnSwingStarted;
+    public event System.Action OnSwingFinished;
 
     [Header("Weapon")]
     [SerializeField] private Transform weaponTransform;
@@ -46,14 +46,14 @@ public class PlayerAnimAttack : MonoBehaviour
 
     private IEnumerator AttackCo()
     {
-        OnStarted?.Invoke();
+        OnSwingStarted?.Invoke();
 
         var swingCo = StartCoroutine(HorizontalSwingCo(swingDuration));
         StartCoroutine(LungeForwardRoutine(lungeDuration));
         StartCoroutine(ScaleWeaponRoutine(scaleDuration));
         yield return swingCo;
 
-        OnFinished?.Invoke();
+        OnSwingFinished?.Invoke();
     }
 
     private IEnumerator HorizontalSwingCo(float duration)
