@@ -139,6 +139,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3775981664373378516, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -415,50 +419,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &963698289
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 963698291}
-  - component: {fileID: 963698290}
-  m_Layer: 0
-  m_Name: AudioManager_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &963698290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963698289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e515d485cebbb4c6a50e0f9f4ed0031, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
---- !u!4 &963698291
+--- !u!4 &545163548 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4514138128453543489, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+  m_PrefabInstance: {fileID: 1826884289}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963698289}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &588484666 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 1022682009366107152, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+  m_PrefabInstance: {fileID: 298441681}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1063927990
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,6 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1541478475}
   - component: {fileID: 1541478474}
+  - component: {fileID: 1541478476}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -649,7 +620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5089f46f9dc316198d8314510b096a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  followTarget: {fileID: 0}
+  followTarget: {fileID: 545163548}
   offsetDistance: {x: 0, y: 8, z: -7}
   followSpeed: 5
 --- !u!4 &1541478475
@@ -668,6 +639,32 @@ Transform:
   - {fileID: 387953655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 46.661, y: 0, z: 0}
+--- !u!114 &1541478476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541478473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c53019692a6061e8faf32f31dc3886bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShakeCamera
+  bounceShakeParams:
+    positionStrength: 0.05
+    rotationStrength: 0.1
+    axesMultiplier:
+      position: {x: 1, y: 1, z: 0}
+      eulerAngles: {x: 0, y: 0, z: 1}
+    freq: 25
+    numBounces: 5
+    randomness: 0.5
+    attenuation:
+      clippingDistance: 10
+      falloffScale: 50
+      falloffDegree: 1
+      axesMultiplier: {x: 1, y: 1, z: 1}
 --- !u!1 &1822041154
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,6 +844,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6254969140447545056, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: animatedLights.Array.data[0].light
+      value: 
+      objectReference: {fileID: 588484666}
+    - target: {fileID: 8676013053710259617, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.63
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -858,9 +863,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1822041157}
   - {fileID: 1063927992}
-  - {fileID: 1213719963}
   - {fileID: 1541478475}
-  - {fileID: 398204640}
-  - {fileID: 963698291}
-  - {fileID: 298441681}
+  - {fileID: 1213719963}
   - {fileID: 1826884289}
+  - {fileID: 298441681}
+  - {fileID: 398204640}

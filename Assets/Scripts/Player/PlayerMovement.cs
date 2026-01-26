@@ -14,17 +14,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 currentDir;
     private Vector3 lastDir;
 
-    private bool moveInterrupted;
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         inputHandler = GetComponent<PlayerInputHandler>();
-    }
-
-    void Update()
-    {
-        HandleMoveInterruption();
     }
 
     void FixedUpdate()
@@ -33,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
         moveDir = new(inputHandler.InputMove.x, 0f, inputHandler.InputMove.y);
 
         // stop movement when attack is performed
-        if (moveInterrupted) return;
+        if (inputHandler.GetPlayerCombat().IsAttacking) return;
 
         // move the transform to target position
         Vector3 targetPosition = rb.position + moveSpeed * Time.fixedDeltaTime * moveDir;
@@ -48,13 +41,7 @@ public class PlayerMovement : MonoBehaviour
         // stop rotation if no inputs have been made, and the last direction is unknown
         if (moveDir.Equals(Vector3.zero) && lastDir.Equals(Vector3.zero)) return;
         Quaternion targetRotation = Quaternion.LookRotation(lastDir);
-        // smoothly interpolate player rotation toward moving direction
         Quaternion newRotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotateSpeed);
         rb.MoveRotation(newRotation);
-    }
-
-    private void HandleMoveInterruption()
-    {
-        moveInterrupted = inputHandler.GetPlayerCombat().IsAttacking;
     }
 }

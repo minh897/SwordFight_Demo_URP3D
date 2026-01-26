@@ -21,8 +21,8 @@ public class Health : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         HandleHealth(damage);
-        HandleDeath();
         HandleHealthUI();
+        HandleDeath();
     }
 
     private void HandleHealth(float damage)

@@ -26,5 +26,25 @@ namespace Assets.Utility
             // making sure the interpolated value reaches its target
             applyLerpTo(end); 
         }
+
+        public static void PlayVFX(ParticleSystem particle)
+        {
+            // Make sure all particles are reset
+            particle.gameObject.SetActive(true);
+            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            particle.Play();
+        }
+
+        public static void PlaySFX(AudioSource sfxSource, AudioClip clip, float volume, float minPitch, float maxPitch)
+        {
+            if (!clip)
+            {
+                Debug.LogWarning("No audio clip to play");
+                return;
+            }
+
+            sfxSource.pitch = Random.Range(minPitch, maxPitch);
+            sfxSource.PlayOneShot(clip, volume);
+        }
     }
 }

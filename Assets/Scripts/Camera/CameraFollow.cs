@@ -6,6 +6,12 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Vector3 offsetDistance;
     [SerializeField] private float followSpeed;
 
+    void Awake()
+    {
+        if (followTarget == null)
+            followTarget = FindFirstObjectByType<PlayerInputHandler>().transform;
+    }
+
     void FixedUpdate()
     {
         // because the player use rigidbody to move, we  need to put camera follow logic

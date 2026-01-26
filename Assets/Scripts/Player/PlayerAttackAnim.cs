@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerAttackAnim : MonoBehaviour
 {
-    public event System.Action OnSwingStarted;
-    public event System.Action OnSwingFinished;
+    public event System.Action OnAttackStarted;
+    public event System.Action OnAttackFinished;
 
     [Header("Weapon")]
     [SerializeField] private Transform weaponTransform;
@@ -46,14 +46,14 @@ public class PlayerAttackAnim : MonoBehaviour
 
     private IEnumerator AttackCo()
     {
-        OnSwingStarted?.Invoke();
+        OnAttackStarted?.Invoke();
 
         var swingCo = StartCoroutine(HorizontalSwingCo(swingDuration));
-        StartCoroutine(LungeForwardRoutine(lungeDuration));
-        StartCoroutine(ScaleWeaponRoutine(scaleDuration));
+        StartCoroutine(LungeForwardCo(lungeDuration));
+        StartCoroutine(ScaleWeaponCo(scaleDuration));
         yield return swingCo;
 
-        OnSwingFinished?.Invoke();
+        OnAttackFinished?.Invoke();
     }
 
     private IEnumerator HorizontalSwingCo(float duration)
@@ -95,7 +95,7 @@ public class PlayerAttackAnim : MonoBehaviour
         targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 
-    private IEnumerator LungeForwardRoutine(float duration)
+    private IEnumerator LungeForwardCo(float duration)
     {
         Vector3 startPos = transform.position;
         Vector3 forward = transform.forward;
@@ -113,7 +113,7 @@ public class PlayerAttackAnim : MonoBehaviour
 
     }
 
-    private IEnumerator ScaleWeaponRoutine(float duration)
+    private IEnumerator ScaleWeaponCo(float duration)
     {
         float startDuration = duration * 0.7f;
         float returnDuration = duration - startDuration;

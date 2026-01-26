@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class PlayerWeaponHitHandler : MonoBehaviour
 {
-    public event System.Action OnHitFrame;
-    public event System.Action OnHitReaction;
-
     [Header("Raycasting")]
     [SerializeField] private float maxCastDistance;
     [SerializeField] private Transform raycastTransform;
@@ -63,9 +60,8 @@ public class PlayerWeaponHitHandler : MonoBehaviour
         if (!hitThisSwing.Add(target))
             return;
 
-        OnHitFrame?.Invoke();
-        OnHitReaction?.Invoke();
         target.HandleTakingDamage(weaponDamage);
+        target.HandleHitReaction(collider, weaponRb.position);
     }
    
 }

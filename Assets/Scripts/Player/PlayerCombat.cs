@@ -7,23 +7,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float damage = 10;
     [SerializeField] private float attackCooldown = 0.5f;
 
-    [Header("Visual effects")]
-    [SerializeField] private ParticleSystem vfxWeaponSwing;
-
-    [Header("Audio data")]
-    [SerializeField] private AudioClip sfxSwordSwing;
-    [SerializeField] private float minPitch;
-    [SerializeField] private float maxPitch;
-    [SerializeField, Range(0, 1)] private float volume;
-
     // components
-    private AudioSource sfxSource;
     private PlayerInputHandler inputHandler;
     private PlayerWeaponHitHandler weaponHitHandler;
     private PlayerAttackAnim attackAnim;
-
-    private int lastSwingDirection = 1; // 1 = right, -1 = left
-    private int currentSwingDirection;
 
     // attack timers
     private float attackTimer = 0f;
@@ -33,24 +20,21 @@ public class PlayerCombat : MonoBehaviour
 
     void Awake()
     {
-        sfxSource = GetComponent<AudioSource>();
         inputHandler = GetComponent<PlayerInputHandler>();
         weaponHitHandler = GetComponent<PlayerWeaponHitHandler>();
         attackAnim = GetComponent<PlayerAttackAnim>();
-
-        currentSwingDirection = lastSwingDirection;
     }
 
     void OnEnable()
     {
-        attackAnim.OnSwingStarted += HandleAttackStarted;
-        attackAnim.OnSwingFinished += HandleAttackFinished;
+        attackAnim.OnAttackStarted += HandleAttackStarted;
+        attackAnim.OnAttackFinished += HandleAttackFinished;
     }
 
     void OnDisable()
     {
-        attackAnim.OnSwingStarted -= HandleAttackStarted;
-        attackAnim.OnSwingFinished -= HandleAttackFinished;
+        attackAnim.OnAttackStarted -= HandleAttackStarted;
+        attackAnim.OnAttackFinished -= HandleAttackFinished;
     }
 
     void FixedUpdate()
@@ -79,25 +63,5 @@ public class PlayerCombat : MonoBehaviour
     {
         IsAttacking = false;
         weaponHitHandler.enabled = false;
-        currentSwingDirection *= -1;
-    }
-
-    private void PlaySwingSFX()
-    {
-        AudioManager.Instance.PlaySFX(sfxSwordSwing, sfxSource, volume, minPitch, maxPitch);
-    }
-
-    private void PlaySwingVFX()
-    {
-        vfxWeaponSwing.gameObject.SetActive(true);
-        vfxWeaponSwing.Play();
-        
-        // flip the vfx rotation in order to be in sync with the swing direction
-        if (currentSwingDirection != lastSwingDirection)
-        {
-            vfxWeaponSwing.transform.localRotation =
-                currentSwingDirection == 1 ? Quaternion.identity : Quaternion.Euler(0, 0, 180);
-            lastSwingDirection = currentSwingDirection;
-        }
     }
 }

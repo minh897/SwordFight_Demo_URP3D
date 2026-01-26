@@ -162,14 +162,13 @@ GameObject:
   - component: {fileID: 4325979857711780762}
   - component: {fileID: 3775981664373378516}
   - component: {fileID: 7253216469455887459}
+  - component: {fileID: 7294141662143326190}
+  - component: {fileID: 333214496077300616}
   - component: {fileID: 6737465868347739629}
   - component: {fileID: 1526531444067943883}
   - component: {fileID: 4398909512442246609}
   - component: {fileID: 4594284875498290021}
-  - component: {fileID: 4170021489640463219}
-  - component: {fileID: 6179314611529892200}
-  - component: {fileID: 7294141662143326190}
-  - component: {fileID: 333214496077300616}
+  - component: {fileID: 7480566767470088335}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
@@ -343,6 +342,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7294141662143326190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76136a97161a7db04aecb700d8a6cb6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  healthSliderUI: {fileID: 6335255355303970597}
+  maxHealth: 500
+  currentHealth: 0
+--- !u!114 &333214496077300616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785916658318261389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6859d19d5f03e5728ddff452aa38390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MakeTransparent
+  transparentMat: {fileID: 2100000, guid: df619c0f15b21983f8d7b6557aa7d457, type: 2}
 --- !u!114 &6737465868347739629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,7 +429,7 @@ MonoBehaviour:
   pushDistance: 0.5
   leanDuration: 0.2
   leanAngle: {x: -30, y: 0, z: 0}
---- !u!114 &4170021489640463219
+--- !u!114 &7480566767470088335
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -411,56 +438,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1785916658318261389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebe37b6213f8adcf9b25e3820b5b75bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 5accd4145866f9b42aca3cebd024663d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  vfxImpact: {fileID: 677137954078002547}
-  vfxExplosion: {fileID: 8130493611254400795}
---- !u!114 &6179314611529892200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11e77fb9e16f2360f8c1c79e0a071612, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  sfxSwordHit: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
-  sfxDeath: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
-  minPitch: 0.85
-  maxPitch: 1
-  volume: 0.633
---- !u!114 &7294141662143326190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76136a97161a7db04aecb700d8a6cb6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Health
-  healthSliderUI: {fileID: 6335255355303970597}
-  maxHealth: 500
-  currentHealth: 0
---- !u!114 &333214496077300616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6859d19d5f03e5728ddff452aa38390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MakeTransparent
-  transparentMat: {fileID: 2100000, guid: df619c0f15b21983f8d7b6557aa7d457, type: 2}
+  vfxHitSpark: {fileID: 677137954078002547}
+  vfxEnemyDeath: {fileID: 8130493611254400795}
+  sfxHitImpact:
+    audio: {fileID: 8300000, guid: 313188edf106d4b8e92d7fd2de69425c, type: 3}
+    minPitch: 0.9
+    maxPitch: 1.2
+    volume: 0.8
+  sfxEnemyExplosion:
+    audio: {fileID: 8300000, guid: 5a0c420814edcf0919142c2e064d1a57, type: 3}
+    minPitch: 1
+    maxPitch: 1
+    volume: 1
 --- !u!1 &2079254304122876202
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,8 +17,8 @@ public class EnemyFollow : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         hitDetection = GetComponent<EnemyHitDetection>();
 
-        if (followTarget.Equals(null))
-            Debug.Log("Please assign a follow target for this script");
+        if (!followTarget)
+            followTarget = FindFirstObjectByType<PlayerInputHandler>().transform;
     }
 
     void FixedUpdate()
