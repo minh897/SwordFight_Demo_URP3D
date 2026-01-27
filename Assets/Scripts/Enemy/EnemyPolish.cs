@@ -11,6 +11,7 @@ public class EnemyPolish : MonoBehaviour
     [SerializeField] private AudioStruct sfxHitImpact;
     [SerializeField] private AudioStruct sfxEnemyExplosion;
 
+    private ShakeCamera shakeCam;
     private AudioSource audioSource;
     private MakeTransparent makeTransparent;
     private EnemyDamageFlash damageFlash;
@@ -18,6 +19,7 @@ public class EnemyPolish : MonoBehaviour
 
     void Awake()
     {
+        shakeCam = FindFirstObjectByType<ShakeCamera>();
         audioSource = GetComponent<AudioSource>();
         makeTransparent = GetComponent<MakeTransparent>();
         hitDetection = GetComponent<EnemyHitDetection>();
@@ -42,6 +44,7 @@ public class EnemyPolish : MonoBehaviour
     {
         Utils.PlayVFX(vfxHitSpark);
         damageFlash.FlashColor();
+        shakeCam.PlayBounceShake();
 
         Utils.PlaySFX(
             audioSource,
