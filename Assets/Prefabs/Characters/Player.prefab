@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 3574269544342180474}
   - component: {fileID: 8801594085453746789}
   - component: {fileID: 8865047435720193076}
-  - component: {fileID: 3259634630208505557}
   - component: {fileID: 5414615397030653440}
   - component: {fileID: 6937076706144806495}
   m_Layer: 0
@@ -300,25 +299,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
   damage: 10
   attackCooldown: 0.3
---- !u!114 &3259634630208505557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1195681051433572024}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 853d9715c663badf7b4f1165b2aeef52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  maxCastDistance: 0.1
-  raycastTransform: {fileID: 4238449870028368535}
+  raycastTransform: {fileID: 4918568011622009041}
+  raycastCollider: {fileID: 5170565497752736517}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  weaponCol: {fileID: 5170565497752736517}
-  weaponRb: {fileID: 8167132299373704826}
 --- !u!114 &5414615397030653440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,12 +319,12 @@ MonoBehaviour:
   weaponTransform: {fileID: 4918568011622009041}
   swingPos_R: {fileID: 6408894952860618213}
   swingPos_L: {fileID: 7237366920475545395}
-  swingDuration: 0.1
-  overshootYAngle: 30
-  lungeDuration: 0.1
-  lungeDistance: 1
-  targetScale: {x: 0, y: 0, z: 1.5}
-  scaleDuration: 0.1
+  swingDuration: 0.2
+  overshootYAngle: 0
+  lungeDuration: 0
+  lungeDistance: 0
+  targetScale: {x: 1, y: 1, z: 1}
+  scaleDuration: 0
 --- !u!114 &6937076706144806495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,7 +332,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1195681051433572024}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50da88dacf03f744ca371299f11ed55d, type: 3}
   m_Name: 

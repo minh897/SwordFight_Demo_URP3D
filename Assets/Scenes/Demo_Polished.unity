@@ -143,6 +143,26 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4594284875498290021, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: leanAngle.x
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594284875498290021, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: leanDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594284875498290021, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: pushDistance
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594284875498290021, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: pushDuration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7480566767470088335, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7847448758086520596, guid: 64ad90e8d1d2a4b6bbfb5bc1eee6e413, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -844,10 +864,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: lungeDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: lungeDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: scaleDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: swingDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: targetScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414615397030653440, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: overshootYAngle
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6254969140447545056, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
       propertyPath: animatedLights.Array.data[0].light
       value: 
       objectReference: {fileID: 588484666}
+    - target: {fileID: 6937076706144806495, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6937076706144806495, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
+      propertyPath: sfxWeaponSwing.volume
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 8676013053710259617, guid: 8fcc690922e500b1a86d5075605c5de5, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 0.63

@@ -1,27 +1,31 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInputHandler))]
 public class PlayerCombat : MonoBehaviour
 {
+    public bool IsAttacking {get; private set; }
+
     [Header("Attack data")]
     [SerializeField] private float damage = 10;
     [SerializeField] private float attackCooldown = 0.5f;
+    
+    [Header("Raycasting")]
+    [SerializeField] private Transform raycastTransform;
+    [SerializeField] private Collider raycastCollider;
+    [SerializeField] private LayerMask layerMask;
 
-    // components
     private PlayerInputHandler inputHandler;
-    private PlayerWeaponHitHandler weaponHitHandler;
     private PlayerAttackAnim attackAnim;
-
-    // attack timers
+    
     private float attackTimer = 0f;
     private float nextTimeAttack = 0f;
 
-    public bool IsAttacking {get; private set; }
+    private HashSet<EnemyHitDetection> hitThisSwing = new();
 
     void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
-        weaponHitHandler = GetComponent<PlayerWeaponHitHandler>();
         attackAnim = GetComponent<PlayerAttackAnim>();
     }
 
@@ -41,11 +45,14 @@ public class PlayerCombat : MonoBehaviour
     {
         attackTimer = Time.time;
 
-        // stop receiving input when attack is performed
-        if (IsAttacking) return;
+        // Return to prevent multiple attack inputs
+        if (IsAttacking)
+        {
+            DetectHits();
+            return;
+        }
 
-        // perform an attack
-        if (inputHandler.InputAttack && attackTimer > nextTimeAttack)
+        if (attackTimer > nextTimeAttack && inputHandler.InputAttack)
         {
             nextTimeAttack = attackCooldown + Time.time;
             attackAnim.PlayAttackAnim();
@@ -55,13 +62,36 @@ public class PlayerCombat : MonoBehaviour
     private void HandleAttackStarted()
     {
         IsAttacking = true;
-        weaponHitHandler.enabled = true;
-        weaponHitHandler.SendDamage(damage);
     }
 
     private void HandleAttackFinished()
     {
         IsAttacking = false;
-        weaponHitHandler.enabled = false;
+        hitThisSwing.Clear();
+    }
+
+    private void DetectHits()
+    {
+        Collider[] hitColliders = Physics.OverlapBox(
+            raycastCollider.bounds.center,
+            raycastTransform.localScale * 0.5f,
+            raycastTransform.rotation,
+            layerMask);
+
+        int i = 0;
+        // Check when there is a new collider coming into contact with the box
+        while (i < hitColliders.Length)
+        {
+            if (hitColliders[i].TryGetComponent<EnemyHitDetection>(out var target))
+            {
+                // Gameplay rule: a single swing cannot damage the same target twice
+                if (!hitThisSwing.Add(target))
+                    return;
+
+                target.HandleTakingDamage(damage);
+                target.HandleHitReaction(hitColliders[i], raycastTransform.position);
+            }
+            i++;
+        }
     }
 }

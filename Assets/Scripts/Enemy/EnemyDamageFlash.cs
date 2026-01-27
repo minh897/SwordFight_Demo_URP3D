@@ -11,10 +11,8 @@ public class EnemyDamageFlash : MonoBehaviour
     [SerializeField] private float flashIntensity = 2f;
     [SerializeField] private float fadeDuration = 0.2f;
     
-    // components
     private Renderer[] renderers;
 
-    // data
     private MaterialPropertyBlock mpb;
     private Color originalEmission;
     private Coroutine flashCo;

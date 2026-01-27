@@ -25,9 +25,6 @@ public class EnemyFollow : MonoBehaviour
     {
         if (followTarget.Equals(null)) return;
 
-        // if enemy is stunned then stop all movement
-        if (hitDetection.GetHit) return;
-
         // continously updating direction
         lookDirection = followTarget.position - transform.position;
         rb.MovePosition(rb.position + followSpeed * Time.fixedDeltaTime * lookDirection);

@@ -1,4 +1,5 @@
 using System.Collections;
+using Assets.Utility;
 using UnityEngine;
 
 public class EnemyImpactAnim : MonoBehaviour
@@ -8,15 +9,15 @@ public class EnemyImpactAnim : MonoBehaviour
     [SerializeField] private float pushDistance;
     [SerializeField] private float leanDuration;
     [SerializeField] private Vector3 leanAngle;
+    private float startXAngle;
+    private float targetXAngle;
 
-    private float currentAngleX;
-    private float targetAngleX;
     private Coroutine impactRoutine;
 
     void Start()
     {
-        currentAngleX = transform.localRotation.x;
-        targetAngleX = currentAngleX + leanAngle.x;
+        startXAngle = transform.eulerAngles.x;
+        targetXAngle = startXAngle + leanAngle.x;
     }
 
     public void PlayImpactAnim()
@@ -27,59 +28,51 @@ public class EnemyImpactAnim : MonoBehaviour
 
     private IEnumerator ImpactRoutine()
     {
-        StartCoroutine(LeanBackwardRoutine(leanDuration));
-        yield return StartCoroutine(PushBackRoutine(pushDuration));
+        StartCoroutine(PivotBackwardCo(leanDuration));
+        yield return StartCoroutine(PushBackCo(pushDuration));
     }
 
-    private IEnumerator PushBackRoutine(float duration)
+    private IEnumerator PushBackCo(float duration)
     {
-        float elapsed = 0f;
-        
-        Vector3 direction = gameObject.GetComponent<EnemyFollow>().GetMovingDirection();
-        Vector3 oppositeDir = -1 * direction;
         Vector3 startPos = transform.position;
-        Vector3 endPos = startPos + oppositeDir * pushDistance;
+        Vector3 backward = -1 * transform.forward;
 
-        // interpolate between current position and target position
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            Vector3 nextPos = Vector3.Lerp(startPos, endPos, t);
-            transform.position = nextPos;
-            yield return null;
-        }
+        float fromDist = 0f;
+        float toDist = pushDistance;
 
-        transform.position = endPos;
+        yield return Utils.LerpOverTime(duration, fromDist, toDist, 
+            currentDist =>
+            {
+                float eased = currentDist * currentDist;
+                Vector3 newPos = startPos + currentDist * pushDistance * backward;
+                transform.position = newPos;
+            });
     }
 
-    private IEnumerator LeanBackwardRoutine(float duration)
+    private IEnumerator PivotBackwardCo(float duration)
     {
-        float elapsed = 0f;
-        float halfDuration = duration * 0.5f;
-        float returnDuration = duration - halfDuration;
-        float startAngleX = currentAngleX;
-        float endAngleX = targetAngleX;
+        float startDuration = duration * 0.7f;
+        float returnDuration = duration - startDuration;
 
-        // phase 1: pivot backward
-        while (elapsed < halfDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / halfDuration);
-            float newAngleX = Mathf.LerpAngle(startAngleX, endAngleX, t);
-            transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
-            yield return null;
-        }
+        float startAngle = startXAngle;
+        float endAngle = targetXAngle;
 
-        // phase2: return to normal rotation
-        elapsed = 0;
-        while (elapsed < returnDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / returnDuration);
-            float newAngleX = Mathf.LerpAngle(endAngleX, startAngleX, t);
-            transform.rotation = Quaternion.Euler(newAngleX, transform.eulerAngles.y, 0);
-            yield return null;
-        }
+        // Pivot transform backward
+        yield return Utils.LerpOverTime(startDuration, startAngle, endAngle, 
+            currentAngle =>
+            {
+                Vector3 newEulerAngles = new(currentAngle, transform.eulerAngles.y, transform.eulerAngles.z);
+                Quaternion newRotation = Quaternion.Euler(newEulerAngles);
+                transform.rotation = newRotation;
+            });
+
+        // Return to normal rotation
+        yield return Utils.LerpOverTime(returnDuration, endAngle, startAngle, 
+            currentAngle =>
+            {
+                Vector3 newEulerAngles = new(currentAngle, transform.eulerAngles.y, transform.eulerAngles.z);
+                Quaternion newRotation = Quaternion.Euler(newEulerAngles);
+                transform.rotation = newRotation;
+            });
     }
 }

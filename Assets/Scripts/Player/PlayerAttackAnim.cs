@@ -87,11 +87,8 @@ public class PlayerAttackAnim : MonoBehaviour
                 weaponTransform.localRotation = newRotation;
             });
 
-        // reverse swing direction
-        rotateDir *= -1;
-        // swap angle value using tuple
-        (endYAngle, startYAngle) = (startYAngle, endYAngle);
-        // calculate new target angle
+        rotateDir *= -1; // reverse swing direction
+        (endYAngle, startYAngle) = (startYAngle, endYAngle); // swap angle value using tuple
         targetYAngle = Mathf.LerpAngle(startYAngle, endYAngle, 1f);
     }
 

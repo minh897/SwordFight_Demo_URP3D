@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   healthSliderUI: {fileID: 6335255355303970597}
-  maxHealth: 500
+  maxHealth: 50
   currentHealth: 0
 --- !u!114 &333214496077300616
 MonoBehaviour:
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   followTarget: {fileID: 0}
-  followSpeed: 0
+  followSpeed: 0.2
   rotateSpeed: 5
 --- !u!114 &1526531444067943883
 MonoBehaviour:
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1785916658318261389}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5accd4145866f9b42aca3cebd024663d, type: 3}
   m_Name: 

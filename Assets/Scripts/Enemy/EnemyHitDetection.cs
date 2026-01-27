@@ -9,8 +9,6 @@ public class EnemyHitDetection : MonoBehaviour
     private Health myHealth;
     private EnemyImpactAnim impactAnim;
 
-    public bool GetHit { get; private set; }
-
     void Awake()
     {
         myHealth = GetComponent<Health>();
